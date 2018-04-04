@@ -94,10 +94,6 @@ processResources {
 
 jar {
     classifier = 'universal'
-    manifest {
-        attributes 'FMLCorePluginContainsFMLMod': 'true'
-        attributes "FMLCorePlugin": "com.henrikstabell.nmclc.NMCLCCoreMod"
-    }
 }
 
 task sourcesJar(type: Jar) {
