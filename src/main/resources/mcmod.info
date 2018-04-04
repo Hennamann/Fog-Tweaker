@@ -1,0 +1,16 @@
+[
+{
+  "modid": "fogworld",
+  "name": "Fog World",
+  "description": "Covers the world in highly configurable fog!",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Hennamann"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

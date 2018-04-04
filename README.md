@@ -1,2 +1,2 @@
 # Fog-World
-Makes the entire world covered in fog
+Cover the world in customizable fog!
