@@ -1,5 +1,9 @@
 package com.henrikstabell.fogworld;
 
+import com.henrikstabell.fogworld.core.FogConfig;
+import com.henrikstabell.fogworld.core.FogWorld;
+import com.henrikstabell.fogworld.util.BiomeUtil;
+import com.henrikstabell.fogworld.util.DimensionUtil;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -13,10 +17,12 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.common.ForgeModContainer;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -29,7 +35,7 @@ import javax.annotation.Nullable;
  * Created by Hennamann(Ole Henrik Stabell) on 03/04/2018.
  */
 @Mod.EventBusSubscriber(modid = FogWorld.MODID, value = {Side.CLIENT})
-public class FogHandler {
+public class FogEventHandler {
 
     private static double fogX;
     private static double fogZ;
@@ -64,9 +70,11 @@ public class FogHandler {
     @SubscribeEvent
     public static void onRenderFog(EntityViewRenderEvent.RenderFogEvent event) {
         Entity entity = event.getEntity();
+        World world = entity.world;
         int playerX = MathHelper.floor(entity.posX);
         int playerY = MathHelper.floor(entity.posY);
         int playerZ = MathHelper.floor(entity.posZ);
+
         if ((double) playerX == fogX && (double) playerZ == fogZ && fogInit) {
             renderFog(event.getFogMode(), fogFarPlaneDistance, 0.75F);
         } else {
@@ -79,31 +87,37 @@ public class FogHandler {
             float farPlaneDistanceScaleBiome;
             for (int weightMixed = -distance; weightMixed <= distance; ++weightMixed) {
                 for (int weightDefault = -distance; weightDefault <= distance; ++weightDefault) {
-                    farPlaneDistance = FogConfig.getFogDensity(playerX + weightMixed, playerY, playerZ + weightDefault);
-                    farPlaneDistanceScaleBiome = 1.0F;
-                    double farPlaneDistanceScale;
-                    if (weightMixed == -distance) {
-                        farPlaneDistanceScale = 1.0D - (entity.posX - (double) playerX);
-                        farPlaneDistance = (float) ((double) farPlaneDistance * farPlaneDistanceScale);
-                        farPlaneDistanceScaleBiome = (float) ((double) farPlaneDistanceScaleBiome * farPlaneDistanceScale);
-                    } else if (weightMixed == distance) {
-                        farPlaneDistanceScale = entity.posX - (double) playerX;
-                        farPlaneDistance = (float) ((double) farPlaneDistance * farPlaneDistanceScale);
-                        farPlaneDistanceScaleBiome = (float) ((double) farPlaneDistanceScaleBiome * farPlaneDistanceScale);
-                    }
+                    Biome fpDistanceBiomeFogAvg = world.getBiomeForCoordsBody(new BlockPos(playerX + weightMixed, playerZ + weightDefault, playerY + weightDefault));
+                    DimensionType dimType = world.provider.getDimensionType();
+                    if (!DimensionUtil.dimensionIsBlacklisted(dimType)) {
+                        if (!BiomeUtil.biomeIsBlacklisted(fpDistanceBiomeFogAvg)) {
+                            farPlaneDistance = FogConfig.getFogDensity(playerX + weightMixed, playerY, playerZ + weightDefault);
+                            farPlaneDistanceScaleBiome = 1.0F;
+                            double farPlaneDistanceScale;
+                            if (weightMixed == -distance) {
+                                farPlaneDistanceScale = 1.0D - (entity.posX - (double) playerX);
+                                farPlaneDistance = (float) ((double) farPlaneDistance * farPlaneDistanceScale);
+                                farPlaneDistanceScaleBiome = (float) ((double) farPlaneDistanceScaleBiome * farPlaneDistanceScale);
+                            } else if (weightMixed == distance) {
+                                farPlaneDistanceScale = entity.posX - (double) playerX;
+                                farPlaneDistance = (float) ((double) farPlaneDistance * farPlaneDistanceScale);
+                                farPlaneDistanceScaleBiome = (float) ((double) farPlaneDistanceScaleBiome * farPlaneDistanceScale);
+                            }
 
-                    if (weightDefault == -distance) {
-                        farPlaneDistanceScale = 1.0D - (entity.posZ - (double) playerZ);
-                        farPlaneDistance = (float) ((double) farPlaneDistance * farPlaneDistanceScale);
-                        farPlaneDistanceScaleBiome = (float) ((double) farPlaneDistanceScaleBiome * farPlaneDistanceScale);
-                    } else if (weightDefault == distance) {
-                        farPlaneDistanceScale = entity.posZ - (double) playerZ;
-                        farPlaneDistance = (float) ((double) farPlaneDistance * farPlaneDistanceScale);
-                        farPlaneDistanceScaleBiome = (float) ((double) farPlaneDistanceScaleBiome * farPlaneDistanceScale);
-                    }
+                            if (weightDefault == -distance) {
+                                farPlaneDistanceScale = 1.0D - (entity.posZ - (double) playerZ);
+                                farPlaneDistance = (float) ((double) farPlaneDistance * farPlaneDistanceScale);
+                                farPlaneDistanceScaleBiome = (float) ((double) farPlaneDistanceScaleBiome * farPlaneDistanceScale);
+                            } else if (weightDefault == distance) {
+                                farPlaneDistanceScale = entity.posZ - (double) playerZ;
+                                farPlaneDistance = (float) ((double) farPlaneDistance * farPlaneDistanceScale);
+                                farPlaneDistanceScaleBiome = (float) ((double) farPlaneDistanceScaleBiome * farPlaneDistanceScale);
+                            }
 
-                    fpDistanceBiomeFog += farPlaneDistance;
-                    weightBiomeFog += farPlaneDistanceScaleBiome;
+                            fpDistanceBiomeFog += farPlaneDistance;
+                            weightBiomeFog += farPlaneDistanceScaleBiome;
+                        }
+                    }
                 }
             }
 
@@ -246,44 +260,50 @@ public class FogHandler {
         float weightMixed;
         for (int celestialAngle = -distance; celestialAngle <= distance; ++celestialAngle) {
             for (int baseScale = -distance; baseScale <= distance; ++baseScale) {
-                int bScale = FogConfig.getFogColor(playerX + celestialAngle, playerY, playerZ + baseScale);
-                rainStrength = (float) ((bScale & 16711680) >> 16);
-                thunderStrength = (float) ((bScale & '\uff00') >> 8);
-                float processedColor = (float) (bScale & 255);
-                weightMixed = 1.0F;
-                double weightDefault;
-                if (celestialAngle == -distance) {
-                    weightDefault = 1.0D - (playerEntity.posX - (double) playerX);
-                    rainStrength = (float) ((double) rainStrength * weightDefault);
-                    thunderStrength = (float) ((double) thunderStrength * weightDefault);
-                    processedColor = (float) ((double) processedColor * weightDefault);
-                    weightMixed = (float) ((double) weightMixed * weightDefault);
-                } else if (celestialAngle == distance) {
-                    weightDefault = playerEntity.posX - (double) playerX;
-                    rainStrength = (float) ((double) rainStrength * weightDefault);
-                    thunderStrength = (float) ((double) thunderStrength * weightDefault);
-                    processedColor = (float) ((double) processedColor * weightDefault);
-                    weightMixed = (float) ((double) weightMixed * weightDefault);
-                }
+                Biome rScale = world.getBiomeForCoordsBody(new BlockPos(playerX + celestialAngle, playerY + celestialAngle, playerZ + baseScale));
+                DimensionType dimType = world.provider.getDimensionType();
+                if (!DimensionUtil.dimensionIsBlacklisted(dimType)) {
+                    if (!BiomeUtil.biomeIsBlacklisted(rScale)) {
+                        int bScale = FogConfig.getFogColor(playerX + celestialAngle, playerY, playerZ + baseScale);
+                        rainStrength = (float) ((bScale & 16711680) >> 16);
+                        thunderStrength = (float) ((bScale & '\uff00') >> 8);
+                        float processedColor = (float) (bScale & 255);
+                        weightMixed = 1.0F;
+                        double weightDefault;
+                        if (celestialAngle == -distance) {
+                            weightDefault = 1.0D - (playerEntity.posX - (double) playerX);
+                            rainStrength = (float) ((double) rainStrength * weightDefault);
+                            thunderStrength = (float) ((double) thunderStrength * weightDefault);
+                            processedColor = (float) ((double) processedColor * weightDefault);
+                            weightMixed = (float) ((double) weightMixed * weightDefault);
+                        } else if (celestialAngle == distance) {
+                            weightDefault = playerEntity.posX - (double) playerX;
+                            rainStrength = (float) ((double) rainStrength * weightDefault);
+                            thunderStrength = (float) ((double) thunderStrength * weightDefault);
+                            processedColor = (float) ((double) processedColor * weightDefault);
+                            weightMixed = (float) ((double) weightMixed * weightDefault);
+                        }
 
-                if (baseScale == -distance) {
-                    weightDefault = 1.0D - (playerEntity.posZ - (double) playerZ);
-                    rainStrength = (float) ((double) rainStrength * weightDefault);
-                    thunderStrength = (float) ((double) thunderStrength * weightDefault);
-                    processedColor = (float) ((double) processedColor * weightDefault);
-                    weightMixed = (float) ((double) weightMixed * weightDefault);
-                } else if (baseScale == distance) {
-                    weightDefault = playerEntity.posZ - (double) playerZ;
-                    rainStrength = (float) ((double) rainStrength * weightDefault);
-                    thunderStrength = (float) ((double) thunderStrength * weightDefault);
-                    processedColor = (float) ((double) processedColor * weightDefault);
-                    weightMixed = (float) ((double) weightMixed * weightDefault);
-                }
+                        if (baseScale == -distance) {
+                            weightDefault = 1.0D - (playerEntity.posZ - (double) playerZ);
+                            rainStrength = (float) ((double) rainStrength * weightDefault);
+                            thunderStrength = (float) ((double) thunderStrength * weightDefault);
+                            processedColor = (float) ((double) processedColor * weightDefault);
+                            weightMixed = (float) ((double) weightMixed * weightDefault);
+                        } else if (baseScale == distance) {
+                            weightDefault = playerEntity.posZ - (double) playerZ;
+                            rainStrength = (float) ((double) rainStrength * weightDefault);
+                            thunderStrength = (float) ((double) thunderStrength * weightDefault);
+                            processedColor = (float) ((double) processedColor * weightDefault);
+                            weightMixed = (float) ((double) weightMixed * weightDefault);
+                        }
 
-                rBiomeFog += rainStrength;
-                gBiomeFog += thunderStrength;
-                bBiomeFog += processedColor;
-                weightBiomeFog += weightMixed;
+                        rBiomeFog += rainStrength;
+                        gBiomeFog += thunderStrength;
+                        bBiomeFog += processedColor;
+                        weightBiomeFog += weightMixed;
+                    }
+                }
             }
         }
 
@@ -327,6 +347,14 @@ public class FogHandler {
             double bFinal = (double) ((bBiomeFog * weightBiomeFog + defB * var34) / weightMixed);
 
             return new Vec3d(rFinal, gFinal, bFinal);
+        }
+    }
+    @SubscribeEvent // TODO: Make this more configurable.
+    public static void onPlayerUpdate(LivingEvent.LivingUpdateEvent event) {
+        EntityLivingBase entity = event.getEntityLiving();
+        World world = entity.world;
+        if (FogConfig.poisonousFog && entity instanceof EntityPlayer && !((EntityPlayer) entity).isCreative() && !DimensionUtil.dimensionIsBlacklisted(world.provider.getDimensionType()) && !BiomeUtil.biomeIsBlacklisted(world.getBiome(new BlockPos(((EntityPlayer) entity).posX, ((EntityPlayer) entity).posY, ((EntityPlayer) entity).posZ))) && ((EntityPlayer) entity).ticksExisted > 1200) {
+            entity.attackEntityFrom(FogWorld.DAMAGEFOG, FogConfig.posionTicks);
         }
     }
 }
