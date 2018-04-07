@@ -7,7 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
 /**
- * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
+ * See The repos LICENSE.MD file for what you can and can't do with the code.
  * Created by Hennamann(Ole Henrik Stabell) on 07/04/2018.
  */
 public class BiomeUtil {
