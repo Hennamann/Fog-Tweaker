@@ -19,7 +19,7 @@ import java.util.List;
 public class FogConfig {
 
     @Config.Name("Fog Density")
-    @Config.Comment("How tick should the fog be?")
+    @Config.Comment("How thick should the fog be?")
     @Config.RequiresWorldRestart
     public static float fogDensity = 0.1F;
 
