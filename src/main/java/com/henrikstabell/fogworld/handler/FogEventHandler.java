@@ -1,7 +1,7 @@
-package com.henrikstabell.fogworld;
+package com.henrikstabell.fogworld.handler;
 
-import com.henrikstabell.fogworld.core.FogConfig;
-import com.henrikstabell.fogworld.core.FogWorld;
+import com.henrikstabell.fogworld.config.FogConfig;
+import com.henrikstabell.fogworld.FogWorld;
 import com.henrikstabell.fogworld.util.BiomeUtil;
 import com.henrikstabell.fogworld.util.DimensionUtil;
 import net.minecraft.block.material.Material;
@@ -18,6 +18,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.DimensionType;
+import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
@@ -87,10 +88,10 @@ public class FogEventHandler {
             float farPlaneDistanceScaleBiome;
             for (int weightMixed = -distance; weightMixed <= distance; ++weightMixed) {
                 for (int weightDefault = -distance; weightDefault <= distance; ++weightDefault) {
-                    Biome fpDistanceBiomeFogAvg = world.getBiomeForCoordsBody(new BlockPos(playerX + weightMixed, playerZ + weightDefault, playerY + weightDefault));
+                    Biome biome = world.getBiomeForCoordsBody(new BlockPos(playerX + weightMixed, playerZ + weightDefault, playerY + weightDefault));
                     DimensionType dimType = world.provider.getDimensionType();
                     if (!DimensionUtil.dimensionIsBlacklisted(dimType)) {
-                        if (!BiomeUtil.biomeIsBlacklisted(fpDistanceBiomeFogAvg)) {
+                        if (!BiomeUtil.biomeIsBlacklisted(biome)) {
                             farPlaneDistance = FogConfig.getFogDensity(playerX + weightMixed, playerY, playerZ + weightDefault);
                             farPlaneDistanceScaleBiome = 1.0F;
                             double farPlaneDistanceScale;
@@ -260,10 +261,10 @@ public class FogEventHandler {
         float weightMixed;
         for (int celestialAngle = -distance; celestialAngle <= distance; ++celestialAngle) {
             for (int baseScale = -distance; baseScale <= distance; ++baseScale) {
-                Biome rScale = world.getBiomeForCoordsBody(new BlockPos(playerX + celestialAngle, playerY + celestialAngle, playerZ + baseScale));
+                Biome biome = world.getBiomeForCoordsBody(new BlockPos(playerX + celestialAngle, playerY + celestialAngle, playerZ + baseScale));
                 DimensionType dimType = world.provider.getDimensionType();
                 if (!DimensionUtil.dimensionIsBlacklisted(dimType)) {
-                    if (!BiomeUtil.biomeIsBlacklisted(rScale)) {
+                    if (!BiomeUtil.biomeIsBlacklisted(biome)) {
                         int bScale = FogConfig.getFogColor(playerX + celestialAngle, playerY, playerZ + baseScale);
                         rainStrength = (float) ((bScale & 16711680) >> 16);
                         thunderStrength = (float) ((bScale & '\uff00') >> 8);
@@ -349,12 +350,15 @@ public class FogEventHandler {
             return new Vec3d(rFinal, gFinal, bFinal);
         }
     }
+    
     @SubscribeEvent // TODO: Make this more configurable.
     public static void onPlayerUpdate(LivingEvent.LivingUpdateEvent event) {
         EntityLivingBase entity = event.getEntityLiving();
         World world = entity.world;
-        if (FogConfig.poisonousFog && entity instanceof EntityPlayer && !((EntityPlayer) entity).isCreative() && !DimensionUtil.dimensionIsBlacklisted(world.provider.getDimensionType()) && !BiomeUtil.biomeIsBlacklisted(world.getBiome(new BlockPos(((EntityPlayer) entity).posX, ((EntityPlayer) entity).posY, ((EntityPlayer) entity).posZ))) && ((EntityPlayer) entity).ticksExisted > 1200) {
-            entity.attackEntityFrom(FogWorld.DAMAGEFOG, FogConfig.posionTicks);
+        if (FogConfig.poisonousFog && entity instanceof EntityPlayer && !((EntityPlayer) entity).isCreative() && !DimensionUtil.dimensionIsBlacklisted(world.provider.getDimensionType()) && !BiomeUtil.biomeIsBlacklisted(world.getBiome(new BlockPos(((EntityPlayer) entity).posX, ((EntityPlayer) entity).posY, ((EntityPlayer) entity).posZ))) && ((EntityPlayer) entity).ticksExisted > FogConfig.posionTicks) {
+            if (world.getLightFor(EnumSkyBlock.SKY, entity.getPosition()) > 10) {
+                entity.attackEntityFrom(FogWorld.DAMAGEFOG, FogConfig.poisonDamage);
+            }
         }
     }
 }

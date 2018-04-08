@@ -1,6 +1,6 @@
 package com.henrikstabell.fogworld.util;
 
-import com.henrikstabell.fogworld.core.FogConfig;
+import com.henrikstabell.fogworld.config.FogConfig;
 import net.minecraft.world.DimensionType;
 import org.apache.commons.lang3.StringUtils;
 

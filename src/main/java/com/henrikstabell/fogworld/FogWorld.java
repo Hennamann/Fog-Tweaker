@@ -1,4 +1,4 @@
-package com.henrikstabell.fogworld.core;
+package com.henrikstabell.fogworld;
 
 import com.henrikstabell.fogworld.proxy.CommonProxy;
 import net.minecraft.util.DamageSource;
@@ -6,8 +6,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 
-import static com.henrikstabell.fogworld.core.FogWorld.MODID;
-import static com.henrikstabell.fogworld.core.FogWorld.VERSION;
+import static com.henrikstabell.fogworld.FogWorld.MODID;
+import static com.henrikstabell.fogworld.FogWorld.VERSION;
 
 /**
  * See The repos LICENSE.MD file for what you can and can't do with the code.
