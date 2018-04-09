@@ -13,7 +13,7 @@ apply plugin: 'maven-publish'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
 
-version = "1.0.0-b" + System.getenv('buildNumber')
+version = "1.1.0-b" + System.getenv('buildNumber')
 group = "com.henrikstabell.fogworld" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "fogworld"
 
@@ -27,7 +27,7 @@ minecraft {
     runDir = "run"
 
     replace '@FINGERPRINT@', System.getenv('signSHA1')
-    replace '@VERSION@', project.minecraft.version
+    replace '@VERSION@', version
 
     // the mappings can be changed at any time, and must be in the following format.
     // snapshot_YYYYMMDD   snapshot are built nightly.
