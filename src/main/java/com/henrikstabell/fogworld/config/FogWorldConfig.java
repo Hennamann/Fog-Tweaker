@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Config(modid = FogWorld.MODID, name = "fogworld")
 @Config.LangKey("fogworld.config.title")
-public class FogConfig {
+public class FogWorldConfig {
 
     @Config.Name("Fog Density")
     @Config.Comment("How thick should the fog be?")
@@ -41,12 +41,12 @@ public class FogConfig {
     public static int poisonDamage = 1;
 
     @Config.Name("Disabled Biomes")
-    @Config.Comment({"A list of disabled biomes, add a biome name or ID to this list and the biome will not render with fog.", "Ex. \"ForestHills \" will disable the Forst Hills biome. "})
+    @Config.Comment({"A list of disabled biomes, add a biome name or ID to this list and the biome will not render with fog.", "Ex. \"ForestHills \" or \"18\" will disable fog in the Forest Hills biome."})
     @Config.RequiresWorldRestart
     public static String[] fogBiomeBlacklist = {};
 
     @Config.Name("Disabled Dimensions")
-    @Config.Comment({"A list of disabled dimensions, add a dimension name to this list and the dimension will not render with fog.", "Ex. \"the_nether\" will disable fog in the Nether."})
+    @Config.Comment({"A list of disabled dimensions, add a dimension name or ID to this list and the dimension will not render with fog.", "Ex. \"the_nether\" or \"-1\" will disable fog in the Nether."})
     @Config.RequiresWorldRestart
     public static String[] fogDimensionBlacklist = {};
 
@@ -54,13 +54,21 @@ public class FogConfig {
     //                    CONFIG END
     // =======================================================
 
-    public static float getFogDensity(int var1, int var2, int var3) { return fogDensity; }
+    public static float getFogDensity(int var1, int var2, int var3) {
+        return fogDensity;
+    }
 
-    public static int getFogColor(int var1, int var2, int var3) { return fogColor; }
+    public static int getFogColor(int var1, int var2, int var3) {
+        return fogColor;
+    }
 
-    public static List<String> getFogBiomeBlacklist() { return Lists.newArrayList(fogBiomeBlacklist); }
+    public static List<String> getFogBiomeBlacklist() {
+        return Lists.newArrayList(fogBiomeBlacklist);
+    }
 
-    public static List<String> getFogDimenstionBlacklist() { return Lists.newArrayList(fogDimensionBlacklist); }
+    public static List<String> getFogDimensionBlacklist() {
+        return Lists.newArrayList(fogDimensionBlacklist);
+    }
 
     @Mod.EventBusSubscriber(modid = FogWorld.MODID)
     private static class EventHandler {

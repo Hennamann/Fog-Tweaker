@@ -1,7 +1,7 @@
 package com.henrikstabell.fogworld.handler;
 
-import com.henrikstabell.fogworld.config.FogConfig;
 import com.henrikstabell.fogworld.FogWorld;
+import com.henrikstabell.fogworld.config.FogWorldConfig;
 import com.henrikstabell.fogworld.util.BiomeUtil;
 import com.henrikstabell.fogworld.util.DimensionUtil;
 import net.minecraft.block.material.Material;
@@ -34,6 +34,8 @@ import javax.annotation.Nullable;
 /**
  * See The repos LICENSE.MD file for what you can and can't do with the code.
  * Created by Hennamann(Ole Henrik Stabell) on 03/04/2018.
+ * <p>
+ * Renders customisable fog in biomes and dimensions not blacklisted in {@link FogWorldConfig#fogBiomeBlacklist} and {@link FogWorldConfig#fogDimensionBlacklist}
  */
 @Mod.EventBusSubscriber(modid = FogWorld.MODID, value = {Side.CLIENT})
 public class FogEventHandler {
@@ -43,6 +45,9 @@ public class FogEventHandler {
     private static boolean fogInit;
     private static float fogFarPlaneDistance;
 
+    /**
+     * Calculates the fog color to be used when rendering the fog.
+     */
     @SubscribeEvent
     public static void onGetFogColor(EntityViewRenderEvent.FogColors event) {
         if (event.getEntity() instanceof EntityPlayer) {
@@ -68,6 +73,10 @@ public class FogEventHandler {
         }
     }
 
+    /**
+     * Renders the fog based on the color and density set in {@link FogWorldConfig}
+     * Only renders in biomes and dimensions not in the blacklist {@link FogWorldConfig#fogBiomeBlacklist} {@link FogWorldConfig#fogDimensionBlacklist}
+     */
     @SubscribeEvent
     public static void onRenderFog(EntityViewRenderEvent.RenderFogEvent event) {
         Entity entity = event.getEntity();
@@ -90,9 +99,9 @@ public class FogEventHandler {
                 for (int weightDefault = -distance; weightDefault <= distance; ++weightDefault) {
                     Biome biome = world.getBiomeForCoordsBody(new BlockPos(playerX + weightMixed, playerZ + weightDefault, playerY + weightDefault));
                     DimensionType dimType = world.provider.getDimensionType();
-                    if (!DimensionUtil.dimensionIsBlacklisted(dimType)) {
-                        if (!BiomeUtil.biomeIsBlacklisted(biome)) {
-                            farPlaneDistance = FogConfig.getFogDensity(playerX + weightMixed, playerY, playerZ + weightDefault);
+                    if (!DimensionUtil.isDimensionBlacklisted(dimType)) {
+                        if (!BiomeUtil.isBiomeBlacklisted(biome)) {
+                            farPlaneDistance = FogWorldConfig.getFogDensity(playerX + weightMixed, playerY, playerZ + weightDefault);
                             farPlaneDistanceScaleBiome = 1.0F;
                             double farPlaneDistanceScale;
                             if (weightMixed == -distance) {
@@ -135,6 +144,13 @@ public class FogEventHandler {
         }
     }
 
+    /**
+     * Renders the fog using OpenGL
+     *
+     * @param fogMode               int
+     * @param farPlaneDistance      float
+     * @param farPlaneDistanceScale float
+     */
     private static void renderFog(int fogMode, float farPlaneDistance, float farPlaneDistanceScale) {
         if (fogMode < 0) {
             GL11.glFogf(GL11.GL_FOG_START, 0.0F);
@@ -145,6 +161,17 @@ public class FogEventHandler {
         }
     }
 
+    /**
+     * Post processes the color to account for any potion effects or graphic options the player may have enabled.
+     *
+     * @param world              {@link World}
+     * @param player             {@link EntityLivingBase}
+     * @param r                  double
+     * @param g                  double
+     * @param b                  double
+     * @param renderPartialTicks double
+     * @return {@link Vec3d}
+     */
     @Nullable
     private static Vec3d postProcessColor(World world, EntityLivingBase player, double r, double g, double b, double renderPartialTicks) {
         double darkScale = (player.lastTickPosY + (player.posY - player.lastTickPosY) * renderPartialTicks) * world.provider.getVoidFogYFactor();
@@ -187,6 +214,17 @@ public class FogEventHandler {
         return new Vec3d(r, g, b);
     }
 
+    /**
+     * Gets the blend color for the fog when underwater
+     *
+     * @param world              {@link World}
+     * @param playerEntity       {@link EntityLivingBase}
+     * @param playerX            int
+     * @param playerY            int
+     * @param playerZ            int
+     * @param renderPartialTicks double
+     * @return {@link this#postProcessColor(World, EntityLivingBase, double, double, double, double)}
+     */
     private static Vec3d getFogBlendColorWater(World world, EntityLivingBase playerEntity, int playerX, int playerY, int playerZ, double renderPartialTicks) {
         byte distance = 2;
         float rBiomeFog = 0.0F;
@@ -243,6 +281,20 @@ public class FogEventHandler {
         return postProcessColor(world, playerEntity, var22, var23, bMixed, renderPartialTicks);
     }
 
+    /**
+     * Gets the normal blend color for the fog
+     *
+     * @param world              {@link World}
+     * @param playerEntity       {@link EntityLivingBase}
+     * @param playerX            int
+     * @param playerY            int
+     * @param playerZ            int
+     * @param defR               float
+     * @param defG               float
+     * @param defB               float
+     * @param renderPartialTicks double
+     * @return {@link Vec3d}
+     */
     private static Vec3d getFogBlendColor(World world, EntityLivingBase playerEntity, int playerX, int playerY, int playerZ, float defR, float defG, float defB, double renderPartialTicks) {
         GameSettings settings = Minecraft.getMinecraft().gameSettings;
         int[] ranges = ForgeModContainer.blendRanges;
@@ -263,9 +315,9 @@ public class FogEventHandler {
             for (int baseScale = -distance; baseScale <= distance; ++baseScale) {
                 Biome biome = world.getBiomeForCoordsBody(new BlockPos(playerX + celestialAngle, playerY + celestialAngle, playerZ + baseScale));
                 DimensionType dimType = world.provider.getDimensionType();
-                if (!DimensionUtil.dimensionIsBlacklisted(dimType)) {
-                    if (!BiomeUtil.biomeIsBlacklisted(biome)) {
-                        int bScale = FogConfig.getFogColor(playerX + celestialAngle, playerY, playerZ + baseScale);
+                if (!DimensionUtil.isDimensionBlacklisted(dimType)) {
+                    if (!BiomeUtil.isBiomeBlacklisted(biome)) {
+                        int bScale = FogWorldConfig.getFogColor(playerX + celestialAngle, playerY, playerZ + baseScale);
                         rainStrength = (float) ((bScale & 16711680) >> 16);
                         thunderStrength = (float) ((bScale & '\uff00') >> 8);
                         float processedColor = (float) (bScale & 255);
@@ -350,14 +402,18 @@ public class FogEventHandler {
             return new Vec3d(rFinal, gFinal, bFinal);
         }
     }
-    
-    @SubscribeEvent // TODO: Make this more configurable.
+
+    /**
+     * Checks if the player is in direct contact with the fog and damages the player accordingly.
+     * TODO: Make this more configurable. Ex. less damage in forests compared to deserts etc.
+     */
+    @SubscribeEvent
     public static void onPlayerUpdate(LivingEvent.LivingUpdateEvent event) {
         EntityLivingBase entity = event.getEntityLiving();
         World world = entity.world;
-        if (FogConfig.poisonousFog && entity instanceof EntityPlayer && !((EntityPlayer) entity).isCreative() && !DimensionUtil.dimensionIsBlacklisted(world.provider.getDimensionType()) && !BiomeUtil.biomeIsBlacklisted(world.getBiome(new BlockPos(((EntityPlayer) entity).posX, ((EntityPlayer) entity).posY, ((EntityPlayer) entity).posZ))) && ((EntityPlayer) entity).ticksExisted > FogConfig.posionTicks) {
+        if (FogWorldConfig.poisonousFog && entity instanceof EntityPlayer && !((EntityPlayer) entity).isCreative() && !DimensionUtil.isDimensionBlacklisted(world.provider.getDimensionType()) && !BiomeUtil.isBiomeBlacklisted(world.getBiome(new BlockPos(((EntityPlayer) entity).posX, ((EntityPlayer) entity).posY, ((EntityPlayer) entity).posZ))) && ((EntityPlayer) entity).ticksExisted > FogWorldConfig.posionTicks) {
             if (world.getLightFor(EnumSkyBlock.SKY, entity.getPosition()) > 10) {
-                entity.attackEntityFrom(FogWorld.DAMAGEFOG, FogConfig.poisonDamage);
+                entity.attackEntityFrom(FogWorld.DAMAGEFOG, FogWorldConfig.poisonDamage);
             }
         }
     }

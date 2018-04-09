@@ -25,5 +25,6 @@ public class FogWorld {
     public static final DamageSource DAMAGEFOG = new DamageSource("fog");
 
     @Mod.EventHandler
-    public static void onPostInit(FMLPostInitializationEvent event) {}
+    public static void onPostInit(FMLPostInitializationEvent event) {
+    }
 }
