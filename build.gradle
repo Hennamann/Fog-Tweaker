@@ -119,11 +119,6 @@ task apiJar(type: Jar) {
     include 'com/henrikstabell/fogworld/api/**/*'
 }
 
-task javadocJar(type: Jar, dependsOn: 'javadoc') {
-    from "build/docs/javadoc"
-    classifier "javadoc"
-}
-
 if (JavaVersion.current().isJava8Compatible()) {
     allprojects {
         tasks.withType(Javadoc) {
@@ -143,7 +138,6 @@ publishing {
             artifact sourcesJar
             artifact deobfJar
             artifact apiJar
-            artifact javadocJar
         }
     }
 
@@ -161,7 +155,6 @@ publishing {
 artifacts {
     archives sourcesJar
     archives deobfJar
-    archives javadocJar
 }
 
 task signJar(type: SignJar, dependsOn: reobfJar) {
