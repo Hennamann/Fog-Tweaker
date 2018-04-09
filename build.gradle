@@ -110,6 +110,15 @@ task exportJavadoc(type: Javadoc) {
     source = sourceSets.main.allSource
 }
 
+task apiJar(type: Jar) {
+    classifier = 'api'
+
+    from sourceSets.main.allSource
+    from sourceSets.main.output
+
+    include 'com/henrikstabell/fogworld/api/**/*'
+}
+
 if (JavaVersion.current().isJava8Compatible()) {
     allprojects {
         tasks.withType(Javadoc) {
@@ -128,6 +137,7 @@ publishing {
 
             artifact sourcesJar
             artifact deobfJar
+            artifact apiJar
         }
     }
 
