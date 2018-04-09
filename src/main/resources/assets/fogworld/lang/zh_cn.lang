@@ -1,5 +1,5 @@
 death.attack.fog=%1$s在雾中丧失了生命
-death.attack.fog.player=%1$s在试图逃脱%2$s时在雾中丧失了生命
+death.attack.fog.player=%1$s在试图逃脱%2$s过程中在雾中丧失了生命
 
 # Config
 fogworld.config.title=FogWorld设置
