@@ -1,0 +1,7 @@
+death.attack.fog=%1$s在雾中丧失了生命
+death.attack.fog.player=%1$s在试图逃脱%2$s时在雾中丧失了生命
+
+# Config
+fogworld.config.title=FogWorld设置
+fogworld.general.fogbiomeblacklist=生物群系黑名单
+fogworld.general.fogdimensionblacklist=维度黑名单
