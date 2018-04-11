@@ -28,6 +28,7 @@ minecraft {
 
     replace '@FINGERPRINT@', System.getenv('signSHA1')
     replace '@VERSION@', project.version
+    replace '@API_VERSION@', api_version
 
     // the mappings can be changed at any time, and must be in the following format.
     // snapshot_YYYYMMDD   snapshot are built nightly.

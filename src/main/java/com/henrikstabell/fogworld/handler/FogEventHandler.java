@@ -6,6 +6,7 @@ import com.henrikstabell.fogworld.api.interfaces.IDimensionFog;
 import com.henrikstabell.fogworld.config.FogWorldConfig;
 import com.henrikstabell.fogworld.util.BiomeUtil;
 import com.henrikstabell.fogworld.util.DimensionUtil;
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -22,6 +23,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
+import net.minecraft.world.WorldProviderHell;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.common.ForgeModContainer;
@@ -30,8 +32,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import org.lwjgl.opengl.GL11;
-
-import javax.annotation.Nullable;
 
 /**
  * See The repos LICENSE.MD file for what you can and can't do with the code.
@@ -62,16 +62,22 @@ public class FogEventHandler {
             if (blockStateAtEyes.getMaterial() == Material.LAVA) {
                 return;
             }
-
             Vec3d mixedColor;
             if (blockStateAtEyes.getMaterial() == Material.WATER) {
                 mixedColor = getFogBlendColorWater(world, player, x, y, z, event.getRenderPartialTicks());
             } else {
                 mixedColor = getFogBlendColor(world, player, x, y, z, event.getRed(), event.getGreen(), event.getBlue(), event.getRenderPartialTicks());
             }
-            event.setRed((float) mixedColor.x);
-            event.setGreen((float) mixedColor.y);
-            event.setBlue((float) mixedColor.z);
+            if (world.provider instanceof WorldProviderHell) {
+                // Amplify color for to counteract darkened fog colors in the nether.
+                event.setRed((float) mixedColor.x * 20.5F);
+                event.setGreen((float) mixedColor.y * 20.5F);
+                event.setBlue((float) mixedColor.z * 20.5F);
+            } else {
+                event.setRed((float) mixedColor.x);
+                event.setGreen((float) mixedColor.y);
+                event.setBlue((float) mixedColor.z);
+            }
         }
     }
 
@@ -114,6 +120,9 @@ public class FogEventHandler {
                                 farPlaneDistance = ((IBiomeFog) biome).getFogDensity(playerX + weightMixed, playerY, playerZ + weightDefault);
                             } else {
                                 farPlaneDistance = FogWorldConfig.getFogDensity(playerX + weightMixed, playerY, playerZ + weightDefault);
+                            }
+                            if (worldProvider instanceof WorldProviderHell) {
+                                farPlaneDistance = farPlaneDistance * 0.8F; // Adjust fog density for the nether
                             }
 
                             farPlaneDistanceScaleBiome = 1.0F;
@@ -186,7 +195,7 @@ public class FogEventHandler {
      * @param renderPartialTicks double
      * @return {@link Vec3d}
      */
-    @Nullable
+    @MethodsReturnNonnullByDefault
     private static Vec3d postProcessColor(World world, EntityLivingBase player, double r, double g, double b, double renderPartialTicks) {
         double darkScale = (player.lastTickPosY + (player.posY - player.lastTickPosY) * renderPartialTicks) * world.provider.getVoidFogYFactor();
         if (player.isPotionActive(MobEffects.BLINDNESS)) {
