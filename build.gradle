@@ -27,7 +27,7 @@ minecraft {
     runDir = "run"
 
     replace '@FINGERPRINT@', System.getenv('signSHA1')
-    replace '@VERSION@', version
+    replace '@VERSION@', project.version
 
     // the mappings can be changed at any time, and must be in the following format.
     // snapshot_YYYYMMDD   snapshot are built nightly.
@@ -111,12 +111,11 @@ task exportJavadoc(type: Javadoc) {
 }
 
 task apiJar(type: Jar) {
-    classifier = 'api'
-
     from sourceSets.main.allSource
     from sourceSets.main.output
 
     include 'com/henrikstabell/fogworld/api/**/*'
+    classifier = 'api'
 }
 
 if (JavaVersion.current().isJava8Compatible()) {
