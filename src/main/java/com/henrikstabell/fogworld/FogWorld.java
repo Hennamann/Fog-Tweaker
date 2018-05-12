@@ -19,7 +19,7 @@ public class FogWorld {
     public static final String MODID = "fogworld";
     public static final String VERSION = "@VERSION@";
 
-    @SidedProxy(serverSide = "com.henrikstabell.proxy.CommonProxy", clientSide = "com.henrikstabell.fogworld.proxy.ClientProxy")
+    @SidedProxy(serverSide = "com.henrikstabell.fogworld.proxy.CommonProxy", clientSide = "com.henrikstabell.fogworld.proxy.ClientProxy")
     public static CommonProxy proxy;
 
     public static final DamageSource DAMAGEFOG = new DamageSource("fog");
