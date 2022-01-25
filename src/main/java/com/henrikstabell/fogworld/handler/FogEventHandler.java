@@ -1,7 +1,7 @@
 package com.henrikstabell.fogworld.handler;
 
 import com.henrikstabell.fogworld.FogWorld;
-import com.henrikstabell.fogworld.config.FogWorldConfig;
+import com.henrikstabell.fogworld.config.Configuration;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.util.Mth;
@@ -20,9 +20,9 @@ public class FogEventHandler {
 
     @SubscribeEvent
     public static void fogColours(EntityViewRenderEvent.FogColors event) {
-        float red = FogWorldConfig.fogColorRed();
-        float green = FogWorldConfig.fogColorGreen();
-        float blue = FogWorldConfig.fogColorBlue();
+        float red = Configuration.fogColorRed();
+        float green = Configuration.fogColorGreen();
+        float blue = Configuration.fogColorBlue();
 
         final float[] fogColors = {Mth.cos(red), Mth.cos(green), Mth.cos(blue)};
 
@@ -33,7 +33,7 @@ public class FogEventHandler {
 
     @SubscribeEvent
     public static void fog(EntityViewRenderEvent.RenderFogEvent event) {
-        float fogDensity = FogWorldConfig.getFogDensity();
+        float fogDensity = Configuration.getFogDensity();
         float shift = (float) (0.001F * event.getPartialTicks());
         fogDensityModifier -= shift;
         fogDensityModifier = Mth.clamp(fogDensityModifier, 0F, 1F);
@@ -56,9 +56,9 @@ public class FogEventHandler {
     @SubscribeEvent
     public static void onPlayerUpdate(LivingEvent.LivingUpdateEvent event) {
         LivingEntity entity = event.getEntityLiving();
-        if (FogWorldConfig.poisonousFog() && entity instanceof Player && !((Player) entity).isCreative()) {
-            if (entity.tickCount > FogWorldConfig.poisonTicks())
-                entity.hurt(FogWorld.DAMAGEFOG, FogWorldConfig.poisonDamage());
+        if (Configuration.poisonousFog() && entity instanceof Player && !((Player) entity).isCreative()) {
+            if (entity.tickCount > Configuration.poisonTicks())
+                entity.hurt(FogWorld.DAMAGEFOG, Configuration.poisonDamage());
         }
     }
 }

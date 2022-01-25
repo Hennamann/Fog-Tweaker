@@ -1,6 +1,6 @@
 package com.henrikstabell.fogworld;
 
-import com.henrikstabell.fogworld.config.FogWorldConfig;
+import com.henrikstabell.fogworld.config.Configuration;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -20,7 +20,7 @@ public class FogWorld {
     public static final DamageSource DAMAGEFOG = new DamageSource("fog");
 
     public FogWorld() {
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, FogWorldConfig.CONFIG_SPEC);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Configuration.CONFIG_SPEC);
     }
 
 }

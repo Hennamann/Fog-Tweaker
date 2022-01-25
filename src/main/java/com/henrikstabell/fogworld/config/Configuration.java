@@ -1,21 +1,17 @@
 package com.henrikstabell.fogworld.config;
 
-import com.google.common.collect.Lists;
-import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.*;
 import org.apache.commons.lang3.tuple.Pair;
-
-import java.util.List;
 
 /**
  * See The repos LICENSE.MD file for what you can and can't do with the code.
  * Created by Hennamann(Ole Henrik Stabell) on 03/04/2018.
  */
-public class FogWorldConfig {
+public class Configuration {
 
     public static final ForgeConfigSpec CONFIG_SPEC;
-    private static final FogWorldConfig CONFIG;
+    private static final Configuration CONFIG;
 
     public final IntValue fogDensity;
     public final IntValue fogColorRed;
@@ -27,13 +23,13 @@ public class FogWorldConfig {
 
     static
     {
-        Pair<FogWorldConfig,ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(FogWorldConfig::new);
+        Pair<Configuration,ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Configuration::new);
 
         CONFIG_SPEC = specPair.getRight();
         CONFIG = specPair.getLeft();
     }
 
-    FogWorldConfig(ForgeConfigSpec.Builder builder)
+    Configuration(ForgeConfigSpec.Builder builder)
     {
         poisonousFog = builder
                 .comment("Should the fog be poisonous?")
