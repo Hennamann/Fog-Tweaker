@@ -1,0 +1,6 @@
+{
+  "death.attack.fog": "%1$s was killed by the fog",
+  "death.attack.fog.player": "%1$s was killed by the fog whilst trying to escape %2$s",
+  "fogworld.config.fogbiomeblacklist": "Biome BlackList",
+  "fogworld.config.fogdimensionblacklist": "Dimension Blacklist"
+}

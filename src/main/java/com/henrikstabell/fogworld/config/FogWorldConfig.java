@@ -1,12 +1,10 @@
 package com.henrikstabell.fogworld.config;
 
 import com.google.common.collect.Lists;
-import com.henrikstabell.fogworld.FogWorld;
-import net.minecraftforge.common.config.Config;
-import net.minecraftforge.common.config.ConfigManager;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.common.BiomeManager;
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec.*;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
 
@@ -14,69 +12,68 @@ import java.util.List;
  * See The repos LICENSE.MD file for what you can and can't do with the code.
  * Created by Hennamann(Ole Henrik Stabell) on 03/04/2018.
  */
-@Config(modid = FogWorld.MODID, name = "fogworld")
-@Config.LangKey("fogworld.config.title")
 public class FogWorldConfig {
 
-    @Config.Name("Fog Density")
-    @Config.Comment("How thick should the fog be?")
-    @Config.RequiresWorldRestart
-    public static float fogDensity = 0.1F;
+    public static final ForgeConfigSpec CONFIG_SPEC;
+    private static final FogWorldConfig CONFIG;
 
-    @Config.Name("Fog Color")
-    @Config.Comment({"What color should the fog be?", "Expects the color to be in decimal"})
-    @Config.RequiresWorldRestart
-    public static int fogColor = 16777215;
+    public final ConfigValue fogDensity;
+    public final IntValue fogColor;
+    public final BooleanValue poisonousFog;
+    public final IntValue poisonTicks;
+    public final IntValue poisonDamage;
 
-    @Config.Name("Poison Fog")
-    @Config.Comment("Should the fog be poisonous?")
-    public static boolean poisonousFog = false;
 
-    @Config.Name("Poison Fog Delay")
-    @Config.Comment({"How many ticks before the player takes damage from the poisonous fog?", "Set in ticks; 1 second = 20 ticks"})
-    public static int posionTicks = 1200;
+    static
+    {
+        Pair<FogWorldConfig,ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(FogWorldConfig::new);
 
-    @Config.Name("Poison Fog Damage")
-    @Config.Comment("How much damage should the poison fog deal per tick?")
-    public static int poisonDamage = 1;
-
-    @Config.Name("Disabled Biomes")
-    @Config.Comment({"A list of disabled biomes, add a biome name or ID to this list and the biome will not render with fog.", "Ex. \"ForestHills \" or \"18\" will disable fog in the Forest Hills biome."})
-    @Config.RequiresWorldRestart
-    public static String[] fogBiomeBlacklist = {};
-
-    @Config.Name("Disabled Dimensions")
-    @Config.Comment({"A list of disabled dimensions, add a dimension name or ID to this list and the dimension will not render with fog.", "Ex. \"the_nether\" or \"-1\" will disable fog in the Nether."})
-    @Config.RequiresWorldRestart
-    public static String[] fogDimensionBlacklist = {};
-
-    // =======================================================
-    //                    CONFIG END
-    // =======================================================
-
-    public static float getFogDensity(int var1, int var2, int var3) {
-        return fogDensity;
+        CONFIG_SPEC = specPair.getRight();
+        CONFIG = specPair.getLeft();
     }
 
-    public static int getFogColor(int var1, int var2, int var3) {
-        return fogColor;
+    FogWorldConfig(ForgeConfigSpec.Builder builder)
+    {
+        poisonousFog = builder
+                .comment("Should the fog be poisonous?")
+                .translation("config.fogworld.poisonousFog")
+                .define("poisonousFog", false);
+        fogColor = builder
+                .comment("What color should the fog be? Set in decimal color.")
+                .translation("config.fogworld.fogcolor")
+                .defineInRange("fogColor", 16777215, 0, 16777215);
+        fogDensity = builder
+                .comment("What density should the fog have?")
+                .translation("config.fogworld.fogdensity")
+                .define("fogDensity", "0.1F");
+        poisonTicks = builder
+                .comment("How many ticks before the player takes damage in the fog? Minimum 20 (1 second), maximum 72000 (1 hour)")
+                .translation("config.fogworld.poisonticks")
+                .defineInRange("poisonTicks", 1200, 20, 72000);
+        poisonDamage = builder
+                .comment("How much damage should the poison fog deal per tick? Minimum 1, Maximum 20")
+                .translation("config.fogworld.poisondamage")
+                .defineInRange("poisonDamage", 1, 1, 20);
     }
 
-    public static List<String> getFogBiomeBlacklist() {
-        return Lists.newArrayList(fogBiomeBlacklist);
+    public static boolean poisonousFog() {
+        return CONFIG.poisonousFog.get();
     }
 
-    public static List<String> getFogDimensionBlacklist() {
-        return Lists.newArrayList(fogDimensionBlacklist);
+    public static int fogColor() {
+        return CONFIG.fogColor.get();
     }
 
-    @Mod.EventBusSubscriber(modid = FogWorld.MODID)
-    private static class EventHandler {
-        @SubscribeEvent
-        public static void onConfigChangedEvent(final ConfigChangedEvent.OnConfigChangedEvent event) {
-            if (event.getModID().equals(FogWorld.MODID)) {
-                ConfigManager.sync(FogWorld.MODID, Config.Type.INSTANCE);
-            }
-        }
+    public static int poisonTicks() {
+        return CONFIG.poisonTicks.get();
     }
+
+    public static int poisonDamage() {
+        return CONFIG.poisonDamage.get();
+    }
+
+    public static Float getFogDensity() {
+        return Float.parseFloat(CONFIG.fogDensity.get().toString());
+    }
+
 }
