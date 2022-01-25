@@ -1,6 +1,14 @@
 {
+  "_comment": "Chines Translation – Outdated…",
   "death.attack.fog": "%1$s在雾中丧失了生命",
   "death.attack.fog.player": "%1$s在试图逃脱%2$s过程中在雾中丧失了生命",
-  "fogworld.config.fogbiomeblacklist": "生物群系黑名单",
-  "fogworld.config.fogdimensionblacklist": "维度黑名单"
+  "config.fogworld.fogdensity": "1. Fog Density",
+  "config.fogworld.fogcolorred": "2. Red Fog Color",
+  "config.fogworld.fogcolorgreen": "3. Green Fog Color",
+  "config.fogworld.fogcolorblue": "4. Blue Fog Color",
+  "config.fogworld.poisonousFog": "1. Poisonous Fog",
+  "config.fogworld.poisonticks": "2. Poison Damage Ticks",
+  "config.fogworld.poisondamage": "3. Poison Damage Amount",
+  "config.fogworld.fogbiomeblacklist": "生物群系黑名单",
+  "config.fogworld.fogdimensionblacklist": "维度黑名单"
 }

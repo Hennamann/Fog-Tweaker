@@ -20,7 +20,8 @@ public class FogWorld {
     public static final DamageSource DAMAGEFOG = new DamageSource("fog");
 
     public FogWorld() {
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Configuration.CONFIG_SPEC);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Configuration.clientSpec);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Configuration.commonSpec);
     }
 
 }

@@ -1,13 +1,14 @@
 {
+  "_comment": "English Translation",
   "death.attack.fog": "%1$s was killed by the fog",
   "death.attack.fog.player": "%1$s was killed by the fog whilst trying to escape %2$s",
   "config.fogworld.fogdensity": "1. Fog Density",
   "config.fogworld.fogcolorred": "2. Red Fog Color",
   "config.fogworld.fogcolorgreen": "3. Green Fog Color",
   "config.fogworld.fogcolorblue": "4. Blue Fog Color",
-  "config.fogworld.poisonousFog": "5. Poisonous Fog",
-  "config.fogworld.poisonticks": "6. Poison Damage Ticks",
-  "config.fogworld.poisondamage": "7. Poison Damage Amount",
+  "config.fogworld.poisonousFog": "1. Poisonous Fog",
+  "config.fogworld.poisonticks": "2. Poison Damage Ticks",
+  "config.fogworld.poisondamage": "3. Poison Damage Amount",
   "config.fogworld.fogbiomeblacklist": "Biome Blacklist",
   "config.fogworld.fogdimensionblacklist": "Dimension Blacklist"
 }

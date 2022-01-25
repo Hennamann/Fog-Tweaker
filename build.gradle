@@ -2,19 +2,16 @@ buildscript {
     repositories {
         // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
         maven { url = 'https://maven.minecraftforge.net' }
-        maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
         mavenCentral()
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
-apply plugin: 'org.spongepowered.mixin'
 
 ext.configFile = file('build.properties')
 ext.config = parseConfig(configFile)
@@ -121,9 +118,8 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
-    maven { url 'https://www.cursemaven.com' } // TOP etc…
-    maven { url = 'https://maven.minecraftforge.net' } // TerraBlender
-}
+    maven { url 'https://www.cursemaven.com' } // Configured etc…
+    }
 
 dependencies {
     // Specify the version of Minecraft to use. If this is any group other than 'net.minecraft', it is assumed
@@ -134,9 +130,6 @@ dependencies {
     // For testing config compat.
     runtimeOnly fg.deobf("curse.maven:configured-457570:${config.configuredId}")
     runtimeOnly fg.deobf("curse.maven:catalogue-459701:${config.catalogueId}")
-
-    // Biomes and stuff
-    implementation fg.deobf("com.github.glitchfiend:TerraBlender-forge:${config.mcVersion}-${config.terraBlenderVersion}")
 
 }
 

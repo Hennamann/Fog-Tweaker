@@ -11,23 +11,37 @@ public interface IBiomeFog {
     /**
      * Should the fog be enabled or disabled in this biome.
      *
-     * @return boolean
+     * @return false to disable the fog
      */
     default boolean getFogEnabled() {
         return true;
     }
 
     /**
-     * Set the density/how much mist there should be in the biome.
+     * Set the density/how much fog there should be in the biome.
      *
      * @return 0 to have no fog at all.
      */
-    float getFogDensity(int var1, int var2, int var3);
+    float getFogDensity();
 
     /**
-     * Sets the color of the fog. Uses decimal values for color.
+     * Sets the red colorvalue used to mix the fogcolor.
      *
-     * @return 0 for black fog.
+     * @return 0 for no red colorvalue.
      */
-    int getFogColor(int var1, int var2, int var3);
+    int getRedFogColor();
+
+    /**
+     * Sets the green colorvalue used to mix the fogcolor.
+     *
+     * @return 0 for no green colorvalue.
+     */
+    int getGreenFogColor();
+
+    /**
+     * Sets the blue colorvalue used to mix the fogcolor.
+     *
+     * @return for 0 no blue colorvalue.
+     */
+    int getBlueFogColor();
 }
