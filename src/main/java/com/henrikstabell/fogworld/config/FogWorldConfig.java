@@ -17,12 +17,13 @@ public class FogWorldConfig {
     public static final ForgeConfigSpec CONFIG_SPEC;
     private static final FogWorldConfig CONFIG;
 
-    public final ConfigValue fogDensity;
-    public final IntValue fogColor;
-    public final BooleanValue poisonousFog;
+    public final IntValue fogDensity;
+    public final IntValue fogColorRed;
+    public final IntValue fogColorGreen;
+    public final IntValue fogColorBlue;
     public final IntValue poisonTicks;
     public final IntValue poisonDamage;
-
+    public final BooleanValue poisonousFog;
 
     static
     {
@@ -38,14 +39,22 @@ public class FogWorldConfig {
                 .comment("Should the fog be poisonous?")
                 .translation("config.fogworld.poisonousFog")
                 .define("poisonousFog", false);
-        fogColor = builder
-                .comment("What color should the fog be? Set in decimal color.")
-                .translation("config.fogworld.fogcolor")
-                .defineInRange("fogColor", 16777215, 0, 16777215);
         fogDensity = builder
-                .comment("What density should the fog have?")
+                .comment("Controls the amount/density of the fog.")
                 .translation("config.fogworld.fogdensity")
-                .define("fogDensity", "0.1F");
+                .defineInRange("fogDensity", 3, 1, 300);
+        fogColorRed = builder
+                .comment("Set the RED color value for the fog. Minimum 0, maximum 255")
+                .translation("config.fogworld.fogcolorred")
+                .defineInRange("fogColorRed", 0, 0, 255);
+        fogColorGreen = builder
+                .comment("Set the GREEN color value for the fog. Minimum 0, maximum 255")
+                .translation("config.fogworld.fogcolorgreen")
+                .defineInRange("fogColorGreen", 0, 0, 255);
+        fogColorBlue = builder
+                .comment("Set the BLUE color value for the fog. Minimum 0, maximum 255")
+                .translation("config.fogworld.fogcolorblue")
+                .defineInRange("fogColorBlue", 0, 0, 255);
         poisonTicks = builder
                 .comment("How many ticks before the player takes damage in the fog? Minimum 20 (1 second), maximum 72000 (1 hour)")
                 .translation("config.fogworld.poisonticks")
@@ -60,8 +69,16 @@ public class FogWorldConfig {
         return CONFIG.poisonousFog.get();
     }
 
-    public static int fogColor() {
-        return CONFIG.fogColor.get();
+    public static float fogColorRed() {
+        return CONFIG.fogColorRed.get().floatValue();
+    }
+
+    public static float fogColorGreen() {
+        return CONFIG.fogColorGreen.get().floatValue();
+    }
+
+    public static float fogColorBlue() {
+        return CONFIG.fogColorBlue.get().floatValue();
     }
 
     public static int poisonTicks() {
@@ -73,7 +90,7 @@ public class FogWorldConfig {
     }
 
     public static Float getFogDensity() {
-        return Float.parseFloat(CONFIG.fogDensity.get().toString());
+        return CONFIG.fogDensity.get().floatValue();
     }
 
 }
