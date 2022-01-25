@@ -1,6 +1,6 @@
 # Fog-World
 
-![Fog World Banner](http://res.cloudinary.com/henrikstabell/image/upload/v1523221183/Fog_World_Banner.png)
+![Fog World Banner](https://github.com/Hennamann/Fog-World/blob/master/src/main/resources/banner.png?raw=true)
 
 *Fog World adds configurable fog to the Minecraft world.*
 
