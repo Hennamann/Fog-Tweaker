@@ -12,28 +12,38 @@ public class Configuration {
 
     public static class Client {
 
+        public final BooleanValue fogEnabled;
         public final IntValue fogDensity;
         public final IntValue fogColorRed;
         public final IntValue fogColorGreen;
         public final IntValue fogColorBlue;
+        public final BooleanValue incompatibleModsWarning;
 
         public Client(ForgeConfigSpec.Builder builder) {
+            fogEnabled = builder
+                    .comment("Disables/Enables the fog rendering introduced by fog world. Vanilla fog is not disabled with this option")
+                    .translation("config.client.fogworld.fogenabled")
+                    .define("fogEnabled", true);
             fogDensity = builder
                     .comment("Controls the amount/density of the fog.")
-                    .translation("config.fogworld.fogdensity")
+                    .translation("config.client.fogworld.fogdensity")
                     .defineInRange("fogDensity", 3, 1, 600);
             fogColorRed = builder
                     .comment("Set the RED color value for the fog. Minimum 0, maximum 255")
-                    .translation("config.fogworld.fogcolorred")
+                    .translation("config.client.fogworld.fogcolorred")
                     .defineInRange("fogColorRed", 0, 0, 255);
             fogColorGreen = builder
                     .comment("Set the GREEN color value for the fog. Minimum 0, maximum 255")
-                    .translation("config.fogworld.fogcolorgreen")
+                    .translation("config.client.fogworld.fogcolorgreen")
                     .defineInRange("fogColorGreen", 0, 0, 255);
             fogColorBlue = builder
                     .comment("Set the BLUE color value for the fog. Minimum 0, maximum 255")
-                    .translation("config.fogworld.fogcolorblue")
+                    .translation("config.client.fogworld.fogcolorblue")
                     .defineInRange("fogColorBlue", 0, 0, 255);
+            incompatibleModsWarning = builder
+                    .comment("Enable warnings on load when using incompatible mods")
+                    .translation("config.client.fogworld.incompatiblemodswarning")
+                    .define("incompatibleModsWarning", true);
         }
 
     }
@@ -47,15 +57,15 @@ public class Configuration {
         public Common(ForgeConfigSpec.Builder builder) {
             poisonousFog = builder
                     .comment("Should the fog be poisonous?")
-                    .translation("config.fogworld.poisonousFog")
+                    .translation("config.common.fogworld.poisonousFog")
                     .define("poisonousFog", false);
             poisonTicks = builder
                     .comment("How many ticks before the player takes damage in the fog? Minimum 20 (1 second), maximum 72000 (1 hour)")
-                    .translation("config.fogworld.poisonticks")
+                    .translation("config.common.fogworld.poisonticks")
                     .defineInRange("poisonTicks", 1200, 20, 72000);
             poisonDamage = builder
                     .comment("How much damage should the poison fog deal per tick? Minimum 1, Maximum 20")
-                    .translation("config.fogworld.poisondamage")
+                    .translation("config.common.fogworld.poisondamage")
                     .defineInRange("poisonDamage", 1, 1, 20);
         }
 
@@ -78,6 +88,10 @@ public class Configuration {
         COMMON = testSpecPair.getLeft();
     }
 
+    public static boolean getFogEnabled() {
+        return CLIENT.fogEnabled.get();
+    }
+
     public static Float getFogDensity() {
         return CLIENT.fogDensity.get().floatValue();
     }
@@ -96,6 +110,10 @@ public class Configuration {
 
     public static boolean poisonousFog() {
         return COMMON.poisonousFog.get();
+    }
+
+    public static boolean incompatibleModsWarning() {
+        return CLIENT.incompatibleModsWarning.get();
     }
 
     public static int poisonTicks() {
