@@ -210,7 +210,7 @@ publishing {
                 username = "${local.userMaven}"
                 password = "${local.passMaven}"
             }
-            url "https://maven.henrikstabell.com/releases"
+            url "https://maven.henrikstabell.com/mods"
             authentication {
                 basic(BasicAuthentication)
             }
