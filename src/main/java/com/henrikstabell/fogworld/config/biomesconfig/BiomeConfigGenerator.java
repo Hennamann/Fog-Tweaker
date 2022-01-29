@@ -2,6 +2,7 @@ package com.henrikstabell.fogworld.config.biomesconfig;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.henrikstabell.fogworld.FogWorld;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -41,7 +42,7 @@ public class BiomeConfigGenerator {
                 File jsonFile = new File(configDir + "/" + biome.getNamespace() + "/" + biome.getPath() + ".json");
                 if (!jsonFile.exists()) {
                     Writer writer = new FileWriter(configDir + "/" + biome.getNamespace() + "/" + biome.getPath() + ".json");
-                    BiomeFogProperties fogProperties = new BiomeFogProperties( false, 6F, false, 1200, 1, biome.getNamespace() + ":" + biome.getPath());
+                    BiomeFogProperties fogProperties = new BiomeFogProperties( false, 6F, 0F, 0F, 0F, false, 1200, 1, biome.getNamespace() + ":" + biome.getPath());
                     gson.toJson(fogProperties, writer);
                     writer.close();
                 }
@@ -49,5 +50,6 @@ public class BiomeConfigGenerator {
                 e.printStackTrace();
             }
         }
+        FogWorld.LOGGER.info("Fog World: Finished Generating/Updating Biome configs.");
     }
 }

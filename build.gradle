@@ -127,7 +127,7 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
     maven { url 'https://www.cursemaven.com' } // Configured etc…
-    flatDir { dirs "libs" }
+    // flatDir { dirs "libs" }
 }
 
 dependencies {
@@ -138,8 +138,9 @@ dependencies {
 
     // Biome Testing
     runtimeOnly fg.deobf("com.github.glitchfiend:TerraBlender-forge:${config.mcVersion}-${config.terraBlenderVersion}")
-    runtimeOnly fg.deobf("OhTheBiomesYoullGo:OhTheBiomesYoullGo-forge:1.18.1-1.3.5.8")
-    runtimeOnly fg.deobf("MagicalForest:MagicalForest-forge:1.18.1-2.0.0")
+    runtimeOnly fg.deobf("curse.maven:biomes-o-plenty-220318:${config.bopId}")
+    runtimeOnly fg.deobf("curse.maven:oh-the-biomes-youll-go-247560:${config.bygId}")
+    runtimeOnly fg.deobf("curse.maven:natures-compass-252848:${config.naturesCompassId}")
 
     // For testing config compat.
     runtimeOnly fg.deobf("curse.maven:configured-457570:${config.configuredId}")

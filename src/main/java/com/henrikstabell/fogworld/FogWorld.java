@@ -41,6 +41,7 @@ public class FogWorld {
     }
 
     private void setupDone(final FMLLoadCompleteEvent event) {
+        LOGGER.info("Fog World: Generating/Updating Biome configs…");
         BiomeConfigGenerator.genBiomeConfigs();
     }
 

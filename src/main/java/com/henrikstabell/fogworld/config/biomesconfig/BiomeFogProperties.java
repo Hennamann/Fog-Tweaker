@@ -8,6 +8,10 @@ public class BiomeFogProperties {
     // Fog Related Options
     private boolean fogEnabled;
     private float fogDensity;
+    private float fogColorRed;
+    private float fogColorGreen;
+    private float fogColorBlue;
+
 
     // Poison Related Options
     private boolean poisonousFogEnabled;
@@ -20,9 +24,12 @@ public class BiomeFogProperties {
 
     }
 
-    public BiomeFogProperties(boolean fogEnabled, float fogDensity, boolean poisonousFogEnabled, int poisonTicks, int poisonDamage, String _comment) {
+    public BiomeFogProperties(boolean fogEnabled, float fogDensity, float fogColorRed, float fogColorGreen, float fogColorBlue, boolean poisonousFogEnabled, int poisonTicks, int poisonDamage, String _comment) {
         this.fogEnabled = fogEnabled;
         this.fogDensity = fogDensity;
+        this.fogColorRed = fogColorRed;
+        this.fogColorGreen = fogColorGreen;
+        this.fogColorBlue = fogColorBlue;
         this.poisonousFogEnabled = poisonousFogEnabled;
         this.poisonTicks = poisonTicks;
         this.poisonDamage = poisonDamage;

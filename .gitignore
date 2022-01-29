@@ -174,4 +174,5 @@ classes/
 
 \.idea/
 
-Fog-World\.iml
+.iml
+.DS_Store
