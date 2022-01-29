@@ -12,12 +12,12 @@ public class BiomeFogProperties {
     private float fogColorGreen;
     private float fogColorBlue;
 
-
     // Poison Related Options
     private boolean poisonousFogEnabled;
     private int poisonTicks;
     private int poisonDamage;
 
+    // Purely for utility… Not used in actual code.
     private String _comment;
 
     public BiomeFogProperties() {

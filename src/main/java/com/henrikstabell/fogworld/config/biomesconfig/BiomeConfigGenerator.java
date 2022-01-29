@@ -33,7 +33,6 @@ public class BiomeConfigGenerator {
         if (!directory.exists()){
             directory.mkdirs();
         }
-
         try {
             if (!new File(configDir + "/README.txt").exists()) {
                 FileWriter readmeWriter = new FileWriter(configDir + "/README.txt");
@@ -43,7 +42,6 @@ public class BiomeConfigGenerator {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         for (ResourceLocation biome : biomes) {
             File namespaceDir = new File (configDir + "/" + biome.getNamespace());
             try {
