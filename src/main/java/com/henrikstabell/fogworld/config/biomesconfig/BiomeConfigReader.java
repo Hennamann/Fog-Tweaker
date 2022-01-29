@@ -22,6 +22,10 @@ public class BiomeConfigReader {
      */
     public static BiomeFogProperties readBiomeConfig(ResourceLocation biomeKey) {
 
+        if (biomeKey == null) {
+            return new BiomeFogProperties( false, 6F, 0F, 0F, 0F, false, 1200, 1, biomeKey.getNamespace() + ":" + biomeKey.getPath());
+        }
+        
         try {
             Gson gson = new Gson();
             Reader biomeConfigReader = Files.newBufferedReader(Paths.get(configDir + "/" + biomeKey.getNamespace() + "/" + biomeKey.getPath() + ".json"));
