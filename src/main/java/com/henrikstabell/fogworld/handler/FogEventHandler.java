@@ -1,6 +1,7 @@
 package com.henrikstabell.fogworld.handler;
 
 import com.henrikstabell.fogworld.FogWorld;
+import com.henrikstabell.fogworld.config.Configuration;
 import com.henrikstabell.fogworld.config.biomesconfig.BiomeConfigReader;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.renderer.FogRenderer;
@@ -22,7 +23,7 @@ public class FogEventHandler {
 
         if (BiomeConfigReader.doesBiomeConfigExist(world.getBiome(pos).getRegistryName())) {
             boolean fogEnabled = BiomeConfigReader.readBiomeConfig(world.getBiome(pos).getRegistryName()).isFogEnabled();
-            if (fogEnabled) {
+            if (fogEnabled && Configuration.getFogEnabled()) {
                 float red = BiomeConfigReader.readBiomeConfig(world.getBiome(pos).getRegistryName()).getFogColorRed();
                 float green = BiomeConfigReader.readBiomeConfig(world.getBiome(pos).getRegistryName()).getFogColorGreen();
                 float blue = BiomeConfigReader.readBiomeConfig(world.getBiome(pos).getRegistryName()).getFogColorBlue();
@@ -44,7 +45,7 @@ public class FogEventHandler {
         if (BiomeConfigReader.doesBiomeConfigExist(world.getBiome(pos).getRegistryName())) {
             boolean fogEnabled = BiomeConfigReader.readBiomeConfig(world.getBiome(pos).getRegistryName()).isFogEnabled();
             float configFogDensity = BiomeConfigReader.readBiomeConfig(world.getBiome(pos).getRegistryName()).getFogDensity();
-            if (fogEnabled) {
+            if (fogEnabled && Configuration.getFogEnabled()) {
                 float fogDensity = configFogDensity;
                 float fogDensityModifier = 0.5F;
                 float fogShift = (float) (0.001F * event.getPartialTicks());

@@ -49,7 +49,7 @@ public class FogWorld {
         List<String> incompatibleMods = List.of("mistcore");
 
         for (String incompatibleMod : incompatibleMods) {
-            if (Configuration.incompatibleModsWarning()) {
+            if (Configuration.getIncompatibleModsWarningEnabled()) {
                 if (ModList.get().isLoaded(incompatibleMod)) {
                     IModInfo mod = ModList.get().getModFileById("fogworld").getMods().get(0);
                     LOGGER.warn("FogWorld: Detected incompatible mod: " + incompatibleMod + " issuing warning!");
