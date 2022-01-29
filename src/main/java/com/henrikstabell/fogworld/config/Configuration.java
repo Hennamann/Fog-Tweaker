@@ -21,9 +21,9 @@ public class Configuration {
         clientSpec = clientSpecPair.getRight();
         CLIENT = clientSpecPair.getLeft();
 
-        final Pair<Common, ForgeConfigSpec> testSpecPair = new ForgeConfigSpec.Builder().configure(Common::new);
-        commonSpec = testSpecPair.getRight();
-        COMMON = testSpecPair.getLeft();
+        final Pair<Common, ForgeConfigSpec> commonSpecPair = new ForgeConfigSpec.Builder().configure(Common::new);
+        commonSpec = commonSpecPair.getRight();
+        COMMON = commonSpecPair.getLeft();
     }
 
     public static boolean getFogEnabled() {

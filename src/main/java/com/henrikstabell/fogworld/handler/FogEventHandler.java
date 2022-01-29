@@ -20,7 +20,7 @@ public class FogEventHandler {
             float green = Configuration.fogColorGreen();
             float blue = Configuration.fogColorBlue();
 
-            final float[] fogColors = {Mth.cos(red), Mth.cos(green), Mth.cos(blue)};
+            final float[] fogColors = {Mth.cos(red), Mth.cos(green), Mth.cos(blue)}; //Seems to fix weird color blending issues… ¯\_(ツ)_/¯
 
             event.setRed(fogColors[0]);
             event.setGreen(fogColors[1]);

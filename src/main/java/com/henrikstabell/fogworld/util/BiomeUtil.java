@@ -13,7 +13,10 @@ import java.util.Optional;
  * <p>
  * Various utility methods for obtaining biome names and ids.
  * Used for the biome whitelist
+ *
+ * This is likely to be removed post-1.18 alpha!
  */
+@Deprecated
 public class BiomeUtil {
 
     /**
@@ -21,7 +24,10 @@ public class BiomeUtil {
      *
      * @param biomeKey {@link ResourceKey<Biome>}
      * @return Biome ResourceKey as {@link Optional<ResourceKey>}
+     *
+     * This is likely to be removed post-1.18 alpha. Use the JSON config system instead!
      */
+    @Deprecated
     public static Optional<ResourceKey<Biome>> getBiome(ResourceKey<Biome> biomeKey) {
         if (Minecraft.getInstance().level != null && Minecraft.getInstance().player != null) {
             if (biomeKey != null) {

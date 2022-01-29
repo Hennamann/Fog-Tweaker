@@ -1,18 +1,19 @@
 package com.henrikstabell.fogworld;
 
 import com.henrikstabell.fogworld.config.Configuration;
+import com.henrikstabell.fogworld.config.biomesconfig.BiomeConfigGenerator;
 import com.henrikstabell.fogworld.util.OptiFineUtil;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraftforge.fml.*;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.forgespi.language.IModInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static com.henrikstabell.fogworld.FogWorld.MODID;
@@ -26,18 +27,25 @@ public class FogWorld {
 
     public static final String MODID = "fogworld";
     public static final DamageSource DAMAGEFOG = new DamageSource("fog");
-    private static final Logger LOGGER = LogManager.getLogger();
+    public static final Logger LOGGER = LogManager.getLogger();
+
 
     public FogWorld() {
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupDone);
 
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Configuration.clientSpec);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Configuration.commonSpec);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Configuration.clientSpec, "fogworld/fogworld-client.toml");
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Configuration.commonSpec, "fogworld/fogworld-common.toml");
+
+    }
+
+    private void setupDone(final FMLLoadCompleteEvent event) {
+        BiomeConfigGenerator.genBiomeConfigs();
     }
 
     private void setup(final FMLCommonSetupEvent event) {
-        List<String> incompatibleMods = Arrays.asList("mistcore");
+        List<String> incompatibleMods = List.of("mistcore");
 
         for (String incompatibleMod : incompatibleMods) {
             if (Configuration.incompatibleModsWarning()) {

@@ -10,7 +10,10 @@ import net.minecraft.world.level.Level;
  * <p>
  * Various utility methods for obtaining dimension names and ids.
  * Used for the dimension blacklist
+ *
+ * This is likely to be removed post-1.18 alpha. Use the JSON config system instead!
  */
+@Deprecated
 public class DimensionUtil {
 
     /**
@@ -18,7 +21,10 @@ public class DimensionUtil {
      *
      * @param dimensionKey {@link ResourceKey<Level>}
      * @return Dimension ResourceKey as {@link ResourceKey<Level>}
+     *
+     * This is likely to be removed post-1.18 alpha. Use the JSON config system instead!
      */
+    @Deprecated
     public static ResourceKey<Level> getDimensionName(ResourceKey<Level> dimensionKey) {
         if (Minecraft.getInstance().level != null) {
             if (dimensionKey != null) {
