@@ -11,8 +11,6 @@
   "config.common.fogworld.poisonousFog": "1. Poisonous Fog",
   "config.common.fogworld.poisonticks": "2. Poison Damage Ticks",
   "config.common.fogworld.poisondamage": "3. Poison Damage Amount",
-  "config.client.fogworld.fogbiomeblacklist": "Biome Blacklist",
-  "config.client.fogworld.fogdimensionblacklist": "Dimension Blacklist",
   "error.fogworld.incompatiblemod.mistcore": "Fog World detected that the mod \"Mist Core\" is installed, this mod is not compatible with Fog World due to shared conflicting code and it will cause issues. It is recommended to remove the mod. You have been warned!",
   "error.fogworld.incompatiblemod.optifine": "Fog World has detected that Optifine is installed, Optifine is not compatible with Fog World and will cause issues when rendering fog. It is recommended to remove Optifine when using Fog World. You have been warned!"
 }

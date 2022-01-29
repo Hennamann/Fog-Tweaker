@@ -18,7 +18,8 @@ public class BiomeConfigGenerator {
     private static final File configDir = new File(Minecraft.getInstance().gameDirectory + "/config/fogworld/biomes");
 
     /**
-     * Creates a JSON config file for every biome registered to the Forge Biome Registry.
+     * Creates a JSON config file for every biome registered in the Forge Biome Registry.
+     * {@link net.minecraftforge.registries.ForgeRegistries#BIOMES}
      * TODO: VERY ALPHA! SUBJECT TO CHANGE!
      */
     public static void genBiomeConfigs() {
@@ -31,6 +32,16 @@ public class BiomeConfigGenerator {
         File directory = new File(configDir.toString());
         if (!directory.exists()){
             directory.mkdirs();
+        }
+
+        try {
+            if (!new File(configDir + "/README.txt").exists()) {
+                FileWriter readmeWriter = new FileWriter(configDir + "/README.txt");
+                readmeWriter.write("For more info on editing the configs located here check the wiki: https://github.com/Hennamann/Fog-World/wiki/Getting-Started-with-the-Config");
+                readmeWriter.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         for (ResourceLocation biome : biomes) {

@@ -1,7 +1,7 @@
 package com.henrikstabell.fogworld.config.biomesconfig;
 
 /**
- * Used for JSON config generation.
+ * Used for JSON config generation and reading.
  */
 public class BiomeFogProperties {
 
@@ -36,4 +36,35 @@ public class BiomeFogProperties {
         this._comment = _comment;
     }
 
+    public boolean isFogEnabled() {
+        return fogEnabled;
+    }
+
+    public float getFogDensity() {
+        return fogDensity;
+    }
+
+    public float getFogColorRed() {
+        return fogColorRed;
+    }
+
+    public float getFogColorGreen() {
+        return fogColorGreen;
+    }
+
+    public float getFogColorBlue() {
+        return fogColorBlue;
+    }
+
+    public boolean isPoisonousFogEnabled() {
+        return poisonousFogEnabled;
+    }
+
+    public int getPoisonTicks() {
+        return poisonTicks;
+    }
+
+    public int getPoisonDamage() {
+        return poisonDamage;
+    }
 }
