@@ -12,14 +12,12 @@ Fog World also has the option of making the fog poisonous on direct contact, thi
 
 This mod is meant to be as configurable as possible if you have any suggestions for more configuration options, feel free to suggest them and I'll be sure to add them.
 
-## Mod Compatibility
+## Config
+To learn how you can configure Fog World for your needs check the [https://github.com/Hennamann/Fog-World/wiki/Getting-Started-with-the-Config-System](Wiki page).
 
-This mod has not been tested with (yet) but should work with Biomes 'O Plenty or any other biome/dimension mod. Biome and dimension blacklisting should also work for other mods as long as you know the biome or dimension name of the mod in question. 
+## Integration for Mod Developers
+For more info on the options available for integration with your mod check the [https://github.com/Hennamann/Fog-World/wiki/Mod-Integration-for-Developers](Wiki page).
 
 ## License
-
 This mod is licensed with the MIT license.
 for more info see: [LICENSE.MD](LICENSE.MD)
-
-## API
-There are plans to add an API for other mods to use for adding better support, more info on this will come!
