@@ -62,7 +62,7 @@ public class Configuration {
             poisonousFogEnabled = builder
                     .comment("Should the fog be poisonous? NOTE: This will disregard individual Biome Configs!")
                     .translation("config.common.fogworld.poisonousFog")
-                    .define("poisonousFog", true);
+                    .define("poisonousFogEnabled", true);
         }
     }
 }

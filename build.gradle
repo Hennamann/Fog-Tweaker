@@ -55,7 +55,7 @@ minecraft {
             property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 
             if (project.hasProperty('mc_uuid')) {
-                //Your uuid without any dashes in the middle
+                //Your uuid
                 args '--uuid', project.getProperty('mc_uuid')
             }
             if (project.hasProperty('mc_username')) {
@@ -175,7 +175,7 @@ def parseConfig(File config) {
     }
 }
 
-def getManifestAttributes(String title) {
+def getManifestAttributes() {
     return [
             "Specification-Title"     : "Fogworld",
             "Specification-Vendor"    : "Hennamann",
@@ -188,18 +188,18 @@ def getManifestAttributes(String title) {
 }
 
 jar {
-    manifest.attributes(getManifestAttributes("Fogworld"))
+    manifest.attributes(getManifestAttributes())
 }
 
 task sourcesJar(type: Jar) {
     from sourceSets.main.allSource
-    manifest.attributes(getManifestAttributes("Fogworld"))
+    manifest.attributes(getManifestAttributes())
     archiveClassifier.set("sources")
 }
 
 task deobfJar(type: Jar) {
     from sourceSets.main.output
-    manifest.attributes(getManifestAttributes("Fogworld"))
+    manifest.attributes(getManifestAttributes())
     archiveClassifier.set("dev")
 }
 

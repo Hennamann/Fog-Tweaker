@@ -32,6 +32,16 @@ public class FogEventHandler {
                         float green = BiomeConfigReader.readBiomeConfig(biome).getFogColorGreen();
                         float blue = BiomeConfigReader.readBiomeConfig(biome).getFogColorBlue();
 
+                        if (red >= 254F) {
+                            red = 254F;
+                        }
+                        if (green >= 254F) {
+                            green = 254F;
+                        }
+                        if (blue >= 254F) {
+                            blue = 254F;
+                        }
+
                         final float[] fogColors = {Mth.cos(red), Mth.cos(green), Mth.cos(blue)}; //Seems to fix weird color blending issues… ¯\_(ツ)_/¯
 
                         event.setRed(fogColors[0]);

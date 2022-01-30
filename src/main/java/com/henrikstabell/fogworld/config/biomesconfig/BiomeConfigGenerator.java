@@ -42,6 +42,15 @@ public class BiomeConfigGenerator {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        try {
+            if (!FogWorld.biomeOverrides.isEmpty()) {
+                Writer writer = new FileWriter(configDir + "/overridden_biomes.json");
+                gson.toJson(FogWorld.biomeOverrides, writer);
+                writer.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         for (ResourceLocation biome : biomes) {
             File namespaceDir = new File (configDir + "/" + biome.getNamespace());
             try {
