@@ -2,19 +2,16 @@ buildscript {
     repositories {
         // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
         maven { url = 'https://maven.minecraftforge.net' }
-        maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
         mavenCentral()
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
-apply plugin: 'org.spongepowered.mixin'
 
 ext.configFile = file('build.properties')
 ext.localFile = file('local.properties')
@@ -53,6 +50,28 @@ minecraft {
     runs {
         client {
             workingDirectory project.file('run')
+
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+
+            if (project.hasProperty('mc_uuid')) {
+                //Your uuid without any dashes in the middle
+                args '--uuid', project.getProperty('mc_uuid')
+            }
+            if (project.hasProperty('mc_username')) {
+                //Your username/display name, this is the name that shows up in chat
+                // Note: This is not your email, even if you have a Mojang account
+                args '--username', project.getProperty('mc_username')
+            }
+            if (project.hasProperty('mc_accessToken')) {
+                //Your access token, you can find it in your '.minecraft/launcher_accounts.json' file
+                args '--accessToken', project.getProperty('mc_accessToken')
+            }
+            if (project.hasProperty('forge_force_ansi')) {
+                //Force ansi if declared as a gradle variable, as the auto detection doesn't detect IntelliJ properly
+                // or eclipse's plugin that adds support for ansi escape in console
+                jvmArg('-Dterminal.ansi=' + project.getProperty('forge_force_ansi'))
+            }
 
             // Recommended logging data for a userdev environment
             // The markers can be added/remove as needed separated by commas.

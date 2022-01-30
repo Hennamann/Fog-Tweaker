@@ -22,16 +22,24 @@ public class BiomeConfigReader {
      */
     public static BiomeFogProperties readBiomeConfig(ResourceLocation biomeKey) {
 
+        BiomeFogProperties biomeFogProps;
+
         if (biomeKey == null) {
             return new BiomeFogProperties( false, 6F, 0F, 0F, 0F, false, 1200, 1, biomeKey.getNamespace() + ":" + biomeKey.getPath());
         }
         try {
             Gson gson = new Gson();
-            Reader biomeConfigReader = Files.newBufferedReader(Paths.get(configDir + "/" + biomeKey.getNamespace() + "/" + biomeKey.getPath() + ".json"));
-            BiomeFogProperties biomeFogProps = gson.fromJson(biomeConfigReader, BiomeFogProperties.class);
 
-            biomeConfigReader.close();
-
+            File allBiomesFile = new File(configDir + "/" + "all_biomes.json"); // Override to set the same settings for every biome.
+            if (allBiomesFile.exists()) {
+                Reader allBiomesFileReader = Files.newBufferedReader(Paths.get(configDir + "/" + "all_biomes.json"));
+                biomeFogProps = gson.fromJson(allBiomesFileReader, BiomeFogProperties.class);
+                allBiomesFileReader.close();
+            } else {
+                Reader biomeConfigReader = Files.newBufferedReader(Paths.get(configDir + "/" + biomeKey.getNamespace() + "/" + biomeKey.getPath() + ".json"));
+                biomeFogProps = gson.fromJson(biomeConfigReader, BiomeFogProperties.class);
+                biomeConfigReader.close();
+            }
             return biomeFogProps;
         } catch (IOException e) {
             e.printStackTrace();

@@ -25,15 +25,17 @@ public class PoisonEventHandler {
         Level world = entity.level;
         BlockPos pos = entity.blockPosition();
 
-        if (BiomeConfigReader.doesBiomeConfigExist(world.getBiome(pos).getRegistryName())) {
-            int poisonTicks = BiomeConfigReader.readBiomeConfig(world.getBiome(pos).getRegistryName()).getPoisonTicks();
-            int poisonDamage = BiomeConfigReader.readBiomeConfig(world.getBiome(pos).getRegistryName()).getPoisonDamage();
+        if (Configuration.getPoisonousFogEnabled()) {
+            if (BiomeConfigReader.doesBiomeConfigExist(world.getBiome(pos).getRegistryName())) {
+                int poisonTicks = BiomeConfigReader.readBiomeConfig(world.getBiome(pos).getRegistryName()).getPoisonTicks();
+                int poisonDamage = BiomeConfigReader.readBiomeConfig(world.getBiome(pos).getRegistryName()).getPoisonDamage();
 
-            boolean fogEnabled = BiomeConfigReader.readBiomeConfig(world.getBiome(pos).getRegistryName()).isFogEnabled();
-            boolean poisonEnabled = BiomeConfigReader.readBiomeConfig(world.getBiome(pos).getRegistryName()).isPoisonousFogEnabled();
-            if (fogEnabled && poisonEnabled && Configuration.getPoisonousFogEnabled() && entity instanceof Player && !((Player) entity).isCreative()) {
-                if (entity.tickCount > poisonTicks)
-                    entity.hurt(FogWorld.DAMAGEFOG, poisonDamage);
+                boolean fogEnabled = BiomeConfigReader.readBiomeConfig(world.getBiome(pos).getRegistryName()).isFogEnabled();
+                boolean poisonEnabled = BiomeConfigReader.readBiomeConfig(world.getBiome(pos).getRegistryName()).isPoisonousFogEnabled();
+                if (fogEnabled && poisonEnabled && entity instanceof Player && !((Player) entity).isCreative()) {
+                    if (entity.tickCount > poisonTicks)
+                        entity.hurt(FogWorld.DAMAGEFOG, poisonDamage);
+                }
             }
         }
     }
