@@ -1,175 +1,242 @@
 buildscript {
     repositories {
-        jcenter()
-        maven { url = "http://files.minecraftforge.net/maven" }
-        maven { url 'https://plugins.gradle.org/m2/' }
+        // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
+        maven { url = 'https://maven.minecraftforge.net' }
+        mavenCentral()
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
     }
 }
-apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'net.minecraftforge.gradle'
+// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
-//Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
+ext.configFile = file('build.properties')
+ext.localFile = file('local.properties')
+ext.config = parseConfig(configFile)
 
-version = "1.1.0-b" + System.getenv('buildNumber')
+if (localFile.exists()) {
+    ext.local = parseConfig(localFile)
+}
+
+version = "${config.version}"
 group = "com.henrikstabell.fogworld" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "fogworld"
 
-sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
-compileJava {
-    sourceCompatibility = targetCompatibility = '1.8'
+// Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
+minecraft {
+    // The mappings can be changed at any time and must be in the following format.
+    // Channel:   Version:
+    // snapshot   YYYYMMDD   Snapshot are built nightly.
+    // stable     #          Stables are built at the discretion of the MCP team.
+    // official   MCVersion  Official field/method names from Mojang mapping files
+    //
+    // You must be aware of the Mojang license when using the 'official' mappings.
+    // See more information here: https://github.com/MinecraftForge/MCPConfig/blob/master/Mojang.md
+    //
+    // Use non-default mappings at your own risk. They may not always work.
+    // Simply re-run your setup task after changing the mappings to update your workspace.
+    mappings channel: 'official', version: "${config.mcVersion}"
+
+    // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg') // Currently, this location cannot be changed from the default.
+
+    // Default run configurations.
+    // These can be tweaked, removed, or duplicated as needed.
+    runs {
+        client {
+            workingDirectory project.file('run')
+
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+
+            if (project.hasProperty('mc_uuid')) {
+                //Your uuid
+                args '--uuid', project.getProperty('mc_uuid')
+            }
+            if (project.hasProperty('mc_username')) {
+                //Your username/display name, this is the name that shows up in chat
+                // Note: This is not your email, even if you have a Mojang account
+                args '--username', project.getProperty('mc_username')
+            }
+            if (project.hasProperty('mc_accessToken')) {
+                //Your access token, you can find it in your '.minecraft/launcher_accounts.json' file
+                args '--accessToken', project.getProperty('mc_accessToken')
+            }
+            if (project.hasProperty('forge_force_ansi')) {
+                //Force ansi if declared as a gradle variable, as the auto detection doesn't detect IntelliJ properly
+                // or eclipse's plugin that adds support for ansi escape in console
+                jvmArg('-Dterminal.ansi=' + project.getProperty('forge_force_ansi'))
+            }
+
+            // Recommended logging data for a userdev environment
+            // The markers can be added/remove as needed separated by commas.
+            // "SCAN": For mods scan.
+            // "REGISTRIES": For firing of registry events.
+            // "REGISTRYDUMP": For getting the contents of all registries.
+            property 'forge.logging.markers', 'REGISTRIES'
+
+            // Recommended logging level for the console
+            // You can set various levels here.
+            // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                fogworld {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            // The markers can be added/remove as needed separated by commas.
+            // "SCAN": For mods scan.
+            // "REGISTRIES": For firing of registry events.
+            // "REGISTRYDUMP": For getting the contents of all registries.
+            property 'forge.logging.markers', 'REGISTRIES'
+
+            // Recommended logging level for the console
+            // You can set various levels here.
+            // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                fogworld {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        data {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            // The markers can be added/remove as needed separated by commas.
+            // "SCAN": For mods scan.
+            // "REGISTRIES": For firing of registry events.
+            // "REGISTRYDUMP": For getting the contents of all registries.
+            property 'forge.logging.markers', 'REGISTRIES'
+
+            // Recommended logging level for the console
+            // You can set various levels here.
+            // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
+            property 'forge.logging.console.level', 'debug'
+
+            // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
+            args '--mod', 'fogworld', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+
+            mods {
+                fogworld {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
 }
 
-minecraft {
-    version = "1.12.2-14.23.2.2653"
-    runDir = "run"
+// Include resources generated by data generators.
+sourceSets.main.resources { srcDir 'src/generated/resources' }
 
-    replace '@FINGERPRINT@', System.getenv('signSHA1')
-    replace '@VERSION@', project.version
-    replace '@API_VERSION@', api_version
-
-    // the mappings can be changed at any time, and must be in the following format.
-    // snapshot_YYYYMMDD   snapshot are built nightly.
-    // stable_#            stables are built at the discretion of the MCP team.
-    // Use non-default mappings at your own risk. they may not always work.
-    // simply re-run your setup task after changing the mappings to update your workspace.
-    mappings = "snapshot_20171003"
-    makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
+repositories {
+    maven { url 'https://www.cursemaven.com' } // Configured etc…
+    // flatDir { dirs "libs" }
 }
 
 dependencies {
-    // you may put jars on which you depend on in ./libs
-    // or you may define them like so..
-    //compile "some.group:artifact:version:classifier"
-    //compile "some.group:artifact:version"
+    // Specify the version of Minecraft to use. If this is any group other than 'net.minecraft', it is assumed
+    // that the dep is a ForgeGradle 'patcher' dependency, and its patches will be applied.
+    // The userdev artifact is a special name and will get all sorts of transformations applied to it.
+    minecraft "net.minecraftforge:forge:${config.mcVersion}-${config.forgeVersion}"
 
-    // real examples
-    //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
-    //compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
+    // Biome Testing
+    runtimeOnly fg.deobf("com.github.glitchfiend:TerraBlender-forge:${config.mcVersion}-${config.terraBlenderVersion}")
+    runtimeOnly fg.deobf("curse.maven:biomes-o-plenty-220318:${config.bopId}")
+    runtimeOnly fg.deobf("curse.maven:oh-the-biomes-youll-go-247560:${config.bygId}")
+    runtimeOnly fg.deobf("curse.maven:natures-compass-252848:${config.naturesCompassId}")
 
-    // the 'provided' configuration is for optional dependencies that exist at compile-time but might not at runtime.
-    //provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-
-    // the deobf configurations:  'deobfCompile' and 'deobfProvided' are the same as the normal compile and provided,
-    // except that these dependencies get remapped to your current MCP mappings
-    //deobfCompile 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-    //deobfProvided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-
-    // for more info...
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
+    // For testing config compat.
+    runtimeOnly fg.deobf("curse.maven:configured-457570:${config.configuredId}")
+    runtimeOnly fg.deobf("curse.maven:catalogue-459701:${config.catalogueId}")
 
 }
 
-sourceSets {
-    main {
-        java {
-            srcDir 'src/main/java'
-        }
-        resources {
-            srcDir 'resources'
-        }
+def parseConfig(File config) {
+    config.withReader {
+        def prop = new Properties()
+        prop.load(it)
+        return (new ConfigSlurper().parse(prop))
     }
 }
 
-processResources {
-    // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
-
-    // replace stuff in mcmod.info, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-
-        // replace version and mcversion
-        expand 'version': project.version, 'mcversion': project.minecraft.version
-    }
-
-    // copy everything else except the mcmod.info
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
+def getManifestAttributes() {
+    return [
+            "Specification-Title"     : "Fogworld",
+            "Specification-Vendor"    : "Hennamann",
+            "Specification-Version"   : "${config.version}",
+            "Implementation-Title"    : project.name,
+            "Implementation-Version"  : project.jar.archiveVersion,
+            "Implementation-Vendor"   : "Hennamann",
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+    ]
 }
 
 jar {
-    classifier = 'universal'
+    manifest.attributes(getManifestAttributes())
 }
 
 task sourcesJar(type: Jar) {
     from sourceSets.main.allSource
-    classifier = 'sources'
+    manifest.attributes(getManifestAttributes())
+    archiveClassifier.set("sources")
 }
 
 task deobfJar(type: Jar) {
-    from(sourceSets.main.output)
-    classifier = 'dev'
+    from sourceSets.main.output
+    manifest.attributes(getManifestAttributes())
+    archiveClassifier.set("dev")
 }
 
 task exportJavadoc(type: Javadoc) {
     source = sourceSets.main.allSource
 }
 
-task apiJar(type: Jar) {
-    from sourceSets.main.allSource
-    from sourceSets.main.output
-
-    include 'com/henrikstabell/fogworld/api/**/*'
-    classifier = 'api'
+task copyBuildXml(type: Copy) {
+    from 'build.properties'
+    into 'output'
 }
 
-if (JavaVersion.current().isJava8Compatible()) {
-    allprojects {
-        tasks.withType(Javadoc) {
-            options.addStringOption('Xdoclint:none', '-quiet')
-        }
-    }
-}
+jar.finalizedBy('reobfJar')
 
-publishing {
-    tasks.publish.dependsOn 'build'
-    publications {
-        mavenJava(MavenPublication) {
-            groupId 'com.henrikstabell.fogworld'
-            artifactId 'FogWorld-1.12'
-            from components.java
+if (localFile.exists()) {
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                groupId 'com.henrikstabell.fogworld'
+                artifactId 'FogWorld-1.18.1'
 
-            artifact sourcesJar
-            artifact deobfJar
-            artifact apiJar
-        }
-    }
-
-    repositories {
-        maven {
-            credentials {
-                username System.getenv('userMaven')
-                password System.getenv('passMaven')
+                artifact jar
+                artifact deobfJar
+                artifact sourcesJar
             }
-            url System.getenv('urlMaven')
+        }
+        repositories {
+            maven {
+                credentials {
+                    username = "${local.userMaven}"
+                    password = "${local.passMaven}"
+                }
+                url "https://maven.henrikstabell.com/mods"
+                authentication {
+                    basic(BasicAuthentication)
+                }
+            }
         }
     }
 }
-
-artifacts {
-    archives sourcesJar
-    archives deobfJar
-}
-
-task signJar(type: SignJar, dependsOn: reobfJar) {
-
-    // Skips if the keyStore property is missing.
-    onlyIf {
-        System.env['keyStore'] != null
-    }
-
-    keyStore = System.getenv('keyStore')
-    alias = System.getenv('keyStoreAlias')
-    storePass = System.getenv('keyStorePass')
-    keyPass = System.getenv('keyStoreKeyPass')
-    inputFile = jar.archivePath
-    outputFile = jar.archivePath
-}
-
-build.dependsOn signJar
