@@ -207,15 +207,6 @@ task exportJavadoc(type: Javadoc) {
     source = sourceSets.main.allSource
 }
 
-task apiJar(type: Jar) {
-    from sourceSets.main.allSource
-    manifest.attributes(getManifestAttributes("Fogworld"))
-    from sourceSets.main.output
-
-    include 'com/henrikstabell/fogworld/api/**/*'
-    archiveClassifier.set("api")
-}
-
 task copyBuildXml(type: Copy) {
     from 'build.properties'
     into 'output'
@@ -233,7 +224,6 @@ if (localFile.exists()) {
                 artifact jar
                 artifact deobfJar
                 artifact sourcesJar
-                artifact apiJar
             }
         }
         repositories {

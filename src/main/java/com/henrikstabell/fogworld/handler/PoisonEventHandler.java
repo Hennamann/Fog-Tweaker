@@ -4,6 +4,7 @@ import com.henrikstabell.fogworld.FogWorld;
 import com.henrikstabell.fogworld.config.Configuration;
 import com.henrikstabell.fogworld.config.biomesconfig.BiomeConfigReader;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -24,17 +25,20 @@ public class PoisonEventHandler {
         LivingEntity entity = event.getEntityLiving();
         Level world = entity.level;
         BlockPos pos = entity.blockPosition();
+        ResourceLocation biome = world.getBiome(pos).getRegistryName();
 
         if (Configuration.getPoisonousFogEnabled()) {
-            if (BiomeConfigReader.doesBiomeConfigExist(world.getBiome(pos).getRegistryName())) {
-                int poisonTicks = BiomeConfigReader.readBiomeConfig(world.getBiome(pos).getRegistryName()).getPoisonTicks();
-                int poisonDamage = BiomeConfigReader.readBiomeConfig(world.getBiome(pos).getRegistryName()).getPoisonDamage();
+            if (!FogWorld.biomeOverrides.contains(biome)) {
+                if (BiomeConfigReader.doesBiomeConfigExist(biome)) {
+                    int poisonTicks = BiomeConfigReader.readBiomeConfig(biome).getPoisonTicks();
+                    int poisonDamage = BiomeConfigReader.readBiomeConfig(biome).getPoisonDamage();
 
-                boolean fogEnabled = BiomeConfigReader.readBiomeConfig(world.getBiome(pos).getRegistryName()).isFogEnabled();
-                boolean poisonEnabled = BiomeConfigReader.readBiomeConfig(world.getBiome(pos).getRegistryName()).isPoisonousFogEnabled();
-                if (fogEnabled && poisonEnabled && entity instanceof Player && !((Player) entity).isCreative()) {
-                    if (entity.tickCount > poisonTicks)
-                        entity.hurt(FogWorld.DAMAGEFOG, poisonDamage);
+                    boolean fogEnabled = BiomeConfigReader.readBiomeConfig(biome).isFogEnabled();
+                    boolean poisonEnabled = BiomeConfigReader.readBiomeConfig(biome).isPoisonousFogEnabled();
+                    if (fogEnabled && poisonEnabled && entity instanceof Player && !((Player) entity).isCreative()) {
+                        if (entity.tickCount > poisonTicks)
+                            entity.hurt(FogWorld.DAMAGEFOG, poisonDamage);
+                    }
                 }
             }
         }
