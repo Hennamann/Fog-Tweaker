@@ -13,10 +13,10 @@ Fog World also has the option of making the fog poisonous on direct contact, thi
 This mod is meant to be as configurable as possible if you have any suggestions for more configuration options, feel free to suggest them and I'll be sure to add them.
 
 ## Config
-To learn how you can configure Fog World for your needs check the [https://github.com/Hennamann/Fog-World/wiki/Getting-Started-with-the-Config-System](Wiki page).
+To learn how you can configure Fog World for your needs check the [Wiki page](https://github.com/Hennamann/Fog-World/wiki/Getting-Started-with-the-Config-System).
 
 ## Integration for Mod Developers
-For more info on the options available for integration with your mod check the [https://github.com/Hennamann/Fog-World/wiki/Mod-Integration-for-Developers](Wiki page).
+For more info on the options available for integration with your mod check the [Wiki page](https://github.com/Hennamann/Fog-World/wiki/Mod-Integration-for-Developers).
 
 ## License
 This mod is licensed with the MIT license.
