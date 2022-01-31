@@ -29,12 +29,13 @@ public class PoisonEventHandler {
 
         if (Configuration.getPoisonousFogEnabled()) {
             if (!FogWorld.biomeOverrides.contains(biome)) {
+                assert biome != null;
                 if (BiomeConfigReader.doesBiomeConfigExist(biome)) {
                     int poisonTicks = BiomeConfigReader.readBiomeConfig(biome).getPoisonTicks();
                     int poisonDamage = BiomeConfigReader.readBiomeConfig(biome).getPoisonDamage();
-
                     boolean fogEnabled = BiomeConfigReader.readBiomeConfig(biome).isFogEnabled();
                     boolean poisonEnabled = BiomeConfigReader.readBiomeConfig(biome).isPoisonousFogEnabled();
+
                     if (fogEnabled && poisonEnabled && entity instanceof Player && !((Player) entity).isCreative()) {
                         if (entity.tickCount > poisonTicks)
                             entity.hurt(FogWorld.DAMAGEFOG, poisonDamage);

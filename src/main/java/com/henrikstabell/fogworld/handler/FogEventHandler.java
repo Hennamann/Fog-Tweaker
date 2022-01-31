@@ -27,6 +27,7 @@ public class FogEventHandler {
 
         if (!FogWorld.biomeOverrides.contains(biome)) {
             if (Configuration.getFogEnabled()) {
+                assert biome != null;
                 if (BiomeConfigReader.doesBiomeConfigExist(biome)) {
                     boolean fogEnabled = BiomeConfigReader.readBiomeConfig(biome).isFogEnabled();
                     if (fogEnabled) {
@@ -56,6 +57,7 @@ public class FogEventHandler {
 
         if (Configuration.getFogEnabled()) {
             if (!FogWorld.biomeOverrides.contains(biome)) {
+                assert biome != null;
                 if (BiomeConfigReader.doesBiomeConfigExist(biome)) {
                     boolean fogEnabled = BiomeConfigReader.readBiomeConfig(biome).isFogEnabled();
                     float configFogDensity = BiomeConfigReader.readBiomeConfig(biome).getFogDensity();
