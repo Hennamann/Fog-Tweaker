@@ -60,7 +60,7 @@ public class BiomeConfigGenerator {
                 File jsonFile = new File(configDir + "/" + biome.getNamespace() + "/" + biome.getPath() + ".json");
                 if (!jsonFile.exists()) {
                     Writer writer = new FileWriter(configDir + "/" + biome.getNamespace() + "/" + biome.getPath() + ".json");
-                    BiomeFogProperties fogProperties = new BiomeFogProperties( false, 6F, 0F, 0F, 0F, false, 1200, 1, biome.getNamespace() + ":" + biome.getPath());
+                    BiomeFogProperties fogProperties = new BiomeFogProperties( false, 6F, "#FFFFFF", false, 1200, 1, biome.getNamespace() + ":" + biome.getPath());
                     gson.toJson(fogProperties, writer);
                     writer.close();
                 }

@@ -25,7 +25,7 @@ public class BiomeConfigReader {
         BiomeFogProperties biomeFogProps;
 
         if (biomeKey == null) {
-            return new BiomeFogProperties( false, 6F, 0F, 0F, 0F, false, 1200, 1, biomeKey.getNamespace() + ":" + biomeKey.getPath());
+            return new BiomeFogProperties( false,6F,"#FFFFFF",false,1200,1,biomeKey.getNamespace() + ":" + biomeKey.getPath());
         }
         try {
             Gson gson = new Gson();
@@ -44,7 +44,7 @@ public class BiomeConfigReader {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new BiomeFogProperties( false, 6F, 0F, 0F, 0F, false, 1200, 1, biomeKey.getNamespace() + ":" + biomeKey.getPath());
+        return new BiomeFogProperties( false, 6F, "#FFFFFF", false, 1200, 1, biomeKey.getNamespace() + ":" + biomeKey.getPath());
     }
 
     /**

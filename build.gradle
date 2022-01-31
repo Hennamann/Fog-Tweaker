@@ -200,7 +200,7 @@ task sourcesJar(type: Jar) {
 task deobfJar(type: Jar) {
     from sourceSets.main.output
     manifest.attributes(getManifestAttributes())
-    archiveClassifier.set("dev")
+    archiveClassifier.set("deobf")
 }
 
 task exportJavadoc(type: Javadoc) {
