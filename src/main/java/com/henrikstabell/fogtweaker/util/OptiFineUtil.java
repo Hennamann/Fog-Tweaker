@@ -1,4 +1,4 @@
-package com.henrikstabell.fogworld.util;
+package com.henrikstabell.fogtweaker.util;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;

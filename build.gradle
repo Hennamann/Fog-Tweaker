@@ -22,8 +22,8 @@ if (localFile.exists()) {
 }
 
 version = "${config.version}"
-group = "com.henrikstabell.fogworld" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "fogworld"
+group = "com.henrikstabell.fogtweaker" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "fogtweaker"
 
 // Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
@@ -51,11 +51,15 @@ minecraft {
         client {
             workingDirectory project.file('run')
 
+            //BoP and Terrablender uses Mixins, this fixes mapping issues during runtime caused by different mappings by Mixin.
             property 'mixin.env.remapRefMap', 'true'
             property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 
+            // The below fields allow you to use your own username and skin during runtime/testing.
+            // This works for Microsoft accounts too, but the accessToken will be in the system keystore for your OS… Happy hunting.
+            // NOTE! Do not store this info in the gradle file itself, store them in your global build.gradle file in your user home folder!!
             if (project.hasProperty('mc_uuid')) {
-                //Your uuid
+                //Your uuid with or without dashes.
                 args '--uuid', project.getProperty('mc_uuid')
             }
             if (project.hasProperty('mc_username')) {
@@ -64,7 +68,8 @@ minecraft {
                 args '--username', project.getProperty('mc_username')
             }
             if (project.hasProperty('mc_accessToken')) {
-                //Your access token, you can find it in your '.minecraft/launcher_accounts.json' file
+                //Your access token, you can find it in your '.minecraft/launcher_accounts.json' file or in the case of Microsoft accounts; -
+                // in the system keystore (ex. KeyChain on MacOS).
                 args '--accessToken', project.getProperty('mc_accessToken')
             }
             if (project.hasProperty('forge_force_ansi')) {
@@ -86,7 +91,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                fogworld {
+                fogtweaker {
                     source sourceSets.main
                 }
             }
@@ -108,7 +113,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                fogworld {
+                fogtweaker {
                     source sourceSets.main
                 }
             }
@@ -130,10 +135,10 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-            args '--mod', 'fogworld', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+            args '--mod', 'fogtweaker', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
             mods {
-                fogworld {
+                fogtweaker {
                     source sourceSets.main
                 }
             }
@@ -156,7 +161,7 @@ dependencies {
     minecraft "net.minecraftforge:forge:${config.mcVersion}-${config.forgeVersion}"
 
     // Biome Testing
-    runtimeOnly fg.deobf("com.github.glitchfiend:TerraBlender-forge:${config.mcVersion}-${config.terraBlenderVersion}")
+    runtimeOnly fg.deobf("com.github.glitchfiend:TerraBlender-forge:${config.mcVersion}-${config.terraBlenderVersion}") //TerraBlender is in the forge maven repo.
     runtimeOnly fg.deobf("curse.maven:biomes-o-plenty-220318:${config.bopId}")
     runtimeOnly fg.deobf("curse.maven:oh-the-biomes-youll-go-247560:${config.bygId}")
     runtimeOnly fg.deobf("curse.maven:natures-compass-252848:${config.naturesCompassId}")
@@ -177,7 +182,7 @@ def parseConfig(File config) {
 
 def getManifestAttributes() {
     return [
-            "Specification-Title"     : "Fogworld",
+            "Specification-Title"     : "Fogtweaker",
             "Specification-Vendor"    : "Hennamann",
             "Specification-Version"   : "${config.version}",
             "Implementation-Title"    : project.name,
@@ -218,8 +223,8 @@ if (localFile.exists()) {
     publishing {
         publications {
             mavenJava(MavenPublication) {
-                groupId 'com.henrikstabell.fogworld'
-                artifactId 'FogWorld-1.18.1'
+                groupId 'com.henrikstabell.fogtweaker'
+                artifactId 'FogTweaker-1.18.1'
 
                 artifact jar
                 artifact deobfJar

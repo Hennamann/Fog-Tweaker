@@ -1,4 +1,6 @@
-package com.henrikstabell.fogworld.config.biomesconfig;
+package com.henrikstabell.fogtweaker.config.biomesconfig;
+
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * Used for JSON config generation and reading.
@@ -10,6 +12,11 @@ public class BiomeFogProperties {
     private float fogDensity;
     private String fogColor;
 
+    // Fog Particle Related Options
+    private boolean particlesEnabled;
+    private String particleType;
+    private int particleAmount;
+
     // Poison Related Options
     private boolean poisonousFogEnabled;
     private int poisonTicks;
@@ -20,10 +27,13 @@ public class BiomeFogProperties {
 
     public BiomeFogProperties() {}
 
-    public BiomeFogProperties(boolean fogEnabled, float fogDensity, String fogColor, boolean poisonousFogEnabled, int poisonTicks, int poisonDamage, String _comment) {
+    public BiomeFogProperties(boolean fogEnabled, float fogDensity, String fogColor, boolean particlesEnabled, String particleType, int particleAmount, boolean poisonousFogEnabled, int poisonTicks, int poisonDamage, String _comment) {
         this.fogEnabled = fogEnabled;
         this.fogDensity = fogDensity;
         this.fogColor = fogColor;
+        this.particlesEnabled = particlesEnabled;
+        this.particleType = particleType;
+        this.particleAmount = particleAmount;
         this.poisonousFogEnabled = poisonousFogEnabled;
         this.poisonTicks = poisonTicks;
         this.poisonDamage = poisonDamage;
@@ -52,5 +62,17 @@ public class BiomeFogProperties {
 
     public int getPoisonDamage() {
         return poisonDamage;
+    }
+
+    public boolean isParticlesEnabled() {
+        return particlesEnabled;
+    }
+
+    public String getParticleType() {
+        return particleType;
+    }
+
+    public int getParticleAmount() {
+        return particleAmount;
     }
 }

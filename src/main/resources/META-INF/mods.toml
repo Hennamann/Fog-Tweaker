@@ -11,31 +11,31 @@ loaderVersion="[39,)" #mandatory This is typically bumped every Minecraft versio
 # Review your options at https://choosealicense.com/. All rights reserved is the default copyright stance, and is thus the default here.
 license="MIT License"
 # A URL to refer people to when problems occur with this mod
-issueTrackerURL="https://github.com/Hennamann/Fog-World/issues" #optional
+issueTrackerURL="https://github.com/Hennamann/Fog-Tweaker/issues" #optional
 # A list of mods - how many allowed here is determined by the individual mod loader
 [[mods]] #mandatory
 # The modid of the mod
-modId="fogworld" #mandatory
+modId="fogtweaker" #mandatory
 # The version number of the mod - there's a few well known ${} variables useable here or just hardcode it
 # ${file.jarVersion} will substitute the value of the Implementation-Version as read from the mod's JAR file metadata
 # see the associated build.gradle script for how to populate this completely automatically during a build
 version="${file.jarVersion}" #mandatory
  # A display name for the mod
-displayName="Fog World" #mandatory
+displayName="Fog Tweaker" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification https://mcforge.readthedocs.io/en/latest/gettingstarted/autoupdate/
 #updateJSONURL="https://change.me.example.invalid/updates.json" #optional
 # A URL for the "homepage" for this mod, displayed in the mod UI
-displayURL="https://www.curseforge.com/minecraft/mc-mods/fog-world" #optional
+displayURL="https://www.curseforge.com/minecraft/mc-mods/fog-tweaker" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
-logoFile="fogworld_banner.png" #optional
+logoFile="fog_tweaker_banner.png" #optional
 # A text field displayed in the mod UI
 #credits="" #optional
 # A text field displayed in the mod UI
 authors="Hennamann" #optional
 # The description text for the mod (multi line!) (#mandatory)
-description='''Cover the world in configurable fog!'''
+description='''Allows for customizable fog in any biome. Mainly intended for modpack creators.'''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
-[[dependencies.fogworld]] #optional
+[[dependencies.fogtweaker]] #optional
     # the modid of the dependency
     modId="forge" #mandatory
     # Does this dependency have to exist - if not, ordering below must be specified
@@ -47,13 +47,13 @@ description='''Cover the world in configurable fog!'''
     # Side this dependency is applied on - BOTH, CLIENT or SERVER
     side="BOTH"
 # Here's another dependency
-[[dependencies.fogworld]]
+[[dependencies.fogtweaker]]
     modId="minecraft"
     mandatory=true
 # This version range declares a minimum of the current minecraft version up to but not including the next major version
     versionRange="[1.18.1,1.19)"
     ordering="NONE"
     side="BOTH"
-[modproperties.fogworld]
-    catalogueImageIcon="fogworld_icon.png"
+[modproperties.fogtweaker]
+    catalogueImageIcon="fog_tweaker_icon.png"
     configuredBackground="minecraft:textures/block/calcite.png"

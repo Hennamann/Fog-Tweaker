@@ -1,19 +1,18 @@
-package com.henrikstabell.fogworld.handler;
+package com.henrikstabell.fogtweaker.handler;
 
-import com.henrikstabell.fogworld.FogWorld;
-import com.henrikstabell.fogworld.config.Configuration;
-import com.henrikstabell.fogworld.config.biomesconfig.BiomeConfigReader;
+import com.henrikstabell.fogtweaker.FogTweaker;
+import com.henrikstabell.fogtweaker.config.Configuration;
+import com.henrikstabell.fogtweaker.config.biomesconfig.BiomeConfigReader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = FogWorld.MODID)
+@Mod.EventBusSubscriber(modid = FogTweaker.MODID)
 public class PoisonEventHandler {
 
     /**
@@ -28,7 +27,7 @@ public class PoisonEventHandler {
         ResourceLocation biome = world.getBiome(pos).getRegistryName();
 
         if (Configuration.getPoisonousFogEnabled()) {
-            if (!FogWorld.biomeOverrides.contains(biome)) {
+            if (!FogTweaker.biomeOverrides.contains(biome)) {
                 assert biome != null;
                 if (BiomeConfigReader.doesBiomeConfigExist(biome)) {
                     int poisonTicks = BiomeConfigReader.readBiomeConfig(biome).getPoisonTicks();
@@ -38,7 +37,7 @@ public class PoisonEventHandler {
 
                     if (fogEnabled && poisonEnabled && entity instanceof Player && !((Player) entity).isCreative()) {
                         if (entity.tickCount > poisonTicks)
-                            entity.hurt(FogWorld.DAMAGEFOG, poisonDamage);
+                            entity.hurt(FogTweaker.DAMAGEFOG, poisonDamage);
                     }
                 }
             }
