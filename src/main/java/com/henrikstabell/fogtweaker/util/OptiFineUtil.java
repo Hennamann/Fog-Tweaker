@@ -8,21 +8,15 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * Used to throw warning about incompatibility with OptiFine.
  **/
 @OnlyIn(Dist.CLIENT)
-public class OptiFineUtil
-{
+public class OptiFineUtil {
     private static Boolean optiFineLoaded = null;
 
-    public static boolean isOptiFineLoaded()
-    {
-        if(optiFineLoaded == null)
-        {
-            try
-            {
+    public static boolean isOptiFineLoaded() {
+        if (optiFineLoaded == null) {
+            try {
                 Class.forName("optifine.Installer");
                 optiFineLoaded = true;
-            }
-            catch(ClassNotFoundException e)
-            {
+            } catch (ClassNotFoundException e) {
                 optiFineLoaded = false;
             }
         }

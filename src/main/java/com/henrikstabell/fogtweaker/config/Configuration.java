@@ -25,6 +25,22 @@ public class Configuration {
         COMMON = commonSpecPair.getLeft();
     }
 
+    public static boolean getFogEnabled() {
+        return CLIENT.fogEnabled.get();
+    }
+
+    public static boolean getFogParticlesEnabled() {
+        return CLIENT.fogParticlesEnabled.get();
+    }
+
+    public static boolean getIncompatibleModsWarningEnabled() {
+        return CLIENT.incompatibleModsWarningEnabled.get();
+    }
+
+    public static boolean getPoisonousFogEnabled() {
+        return COMMON.poisonousFogEnabled.get();
+    }
+
     public static class Client {
 
         public final BooleanValue fogEnabled;
@@ -47,18 +63,6 @@ public class Configuration {
         }
     }
 
-    public static boolean getFogEnabled() {
-        return CLIENT.fogEnabled.get();
-    }
-
-    public static boolean getFogParticlesEnabled() {
-        return CLIENT.fogParticlesEnabled.get();
-    }
-
-    public static boolean getIncompatibleModsWarningEnabled() {
-        return CLIENT.incompatibleModsWarningEnabled.get();
-    }
-
     public static class Common {
 
         public final BooleanValue poisonousFogEnabled;
@@ -69,9 +73,5 @@ public class Configuration {
                     .translation("config.common.fogtweaker.poisonousFog")
                     .define("poisonousFogEnabled", true);
         }
-    }
-
-    public static boolean getPoisonousFogEnabled() {
-        return COMMON.poisonousFogEnabled.get();
     }
 }

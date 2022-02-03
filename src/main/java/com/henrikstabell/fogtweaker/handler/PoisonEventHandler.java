@@ -16,7 +16,7 @@ import net.minecraftforge.fml.common.Mod;
 public class PoisonEventHandler {
 
     /**
-     * Checks if the player is in direct contact with the fog and damages the player accordingly.
+     * Checks if the Biome the entity is in is a fog biome and hurts the player if fog poison is enabled for the biome.
      * Uses the JSON configs to determine if damage should be dealt and how much and how often.
      */
     @SubscribeEvent
@@ -32,10 +32,9 @@ public class PoisonEventHandler {
                 if (BiomeConfigReader.doesBiomeConfigExist(biome)) {
                     int poisonTicks = BiomeConfigReader.readBiomeConfig(biome).getPoisonTicks();
                     int poisonDamage = BiomeConfigReader.readBiomeConfig(biome).getPoisonDamage();
-                    boolean fogEnabled = BiomeConfigReader.readBiomeConfig(biome).isFogEnabled();
                     boolean poisonEnabled = BiomeConfigReader.readBiomeConfig(biome).isPoisonousFogEnabled();
 
-                    if (fogEnabled && poisonEnabled && entity instanceof Player && !((Player) entity).isCreative()) {
+                    if (poisonEnabled && !((Player) entity).isCreative()) {
                         if (entity.tickCount > poisonTicks)
                             entity.hurt(FogTweaker.DAMAGEFOG, poisonDamage);
                     }

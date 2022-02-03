@@ -10,7 +10,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.FogType;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
@@ -61,6 +65,9 @@ public class FogEventHandler {
         BlockPos pos = event.getCamera().getBlockPosition();
         ResourceLocation biome = world.getBiome(pos).getRegistryName();
 
+        FogType fogtype = event.getCamera().getFluidInCamera();
+        Entity entity = event.getCamera().getEntity();
+
         if (Configuration.getFogEnabled()) {
             if (!FogTweaker.biomeOverrides.contains(biome)) {
                 assert biome != null;
@@ -68,26 +75,59 @@ public class FogEventHandler {
                     boolean fogEnabled = BiomeConfigReader.readBiomeConfig(biome).isFogEnabled();
                     float configFogDensity = BiomeConfigReader.readBiomeConfig(biome).getFogDensity();
                     if (fogEnabled) {
-                        float fogDensity = configFogDensity;
-                        float fogDensityModifier = 1F;
-                        fogDensityModifier += (float) (0.1F * event.getPartialTicks());
-                        fogDensityModifier = Mth.clampedLerp(fogDensityModifier, 0F, 1F);
-                        fogDensity = fogDensity >= event.getFarPlaneDistance() ? event.getFarPlaneDistance() : Mth.clampedLerp(fogDensity, event.getFarPlaneDistance(), fogDensityModifier);
-
-                        if (event.getMode() == FogRenderer.FogMode.FOG_SKY) {
-                            RenderSystem.setShaderFogStart(0.0F);
-                            RenderSystem.setShaderFogEnd(fogDensity);
-                        } else {
-                            RenderSystem.setShaderFogStart(fogDensity * 0.75F);
-                            RenderSystem.setShaderFogEnd(fogDensity);
-                        }
-                        if (Configuration.getFogParticlesEnabled() && BiomeConfigReader.readBiomeConfig(biome).isParticlesEnabled() && !Minecraft.getInstance().isPaused()) {
-                            Random random = event.getCamera().getEntity().getLevel().getRandom();
-                            for (int i = 0; i < BiomeConfigReader.readBiomeConfig(biome).getParticleAmount(); i++) {
-                                Vec3 vec = event.getCamera().getEntity().position().add(0, random.nextDouble() * 3D, 0).add(new Vec3(random.nextDouble() * 3D, 0D, 0D).yRot((float) Math.toRadians(random.nextInt(360))));
-                                event.getCamera().getEntity().level.addParticle((ParticleOptions) Objects.requireNonNull(ForgeRegistries.PARTICLE_TYPES.getValue(new ResourceLocation(BiomeConfigReader.readBiomeConfig(biome).getParticleType()))), vec.x, vec.y, vec.z, 0, 0, 0);
+                        float f2;
+                        float f3;
+                        if (fogtype == FogType.LAVA) {
+                            if (entity.isSpectator()) {
+                                f2 = -8.0F;
+                                f3 = configFogDensity * 0.5F;
+                            } else if (entity instanceof LivingEntity && ((LivingEntity) entity).hasEffect(MobEffects.FIRE_RESISTANCE)) {
+                                f2 = 0.0F;
+                                f3 = 3.0F;
+                            } else {
+                                f2 = 0.25F;
+                                f3 = 1.0F;
                             }
+                        } else if (entity instanceof LivingEntity && ((LivingEntity) entity).hasEffect(MobEffects.BLINDNESS)) {
+                            int i = Objects.requireNonNull(((LivingEntity) entity).getEffect(MobEffects.BLINDNESS)).getDuration();
+                            float f1 = Mth.lerp(Math.min(1.0F, (float) i / 20.0F), configFogDensity, 5.0F);
+                            if (event.getMode() == FogRenderer.FogMode.FOG_SKY) {
+                                f2 = 0.0F;
+                                f3 = f1 * 0.8F;
+                            } else {
+                                f2 = f1 * 0.25F;
+                                f3 = f1;
+                            }
+                        } else if (fogtype == FogType.POWDER_SNOW) {
+                            if (entity.isSpectator()) {
+                                f2 = -8.0F;
+                                f3 = configFogDensity * 0.5F;
+                            } else {
+                                f2 = 0.0F;
+                                f3 = 2.0F;
+                            }
+                        } else if (event.getMode() == FogRenderer.FogMode.FOG_SKY) {
+                            f2 = 0.0F;
+                            f3 = configFogDensity;
+                        } else {
+                            float f4 = Mth.clamp(configFogDensity / 10.0F, 4.0F, 64.0F);
+                            f2 = configFogDensity - f4;
+                            f3 = configFogDensity;
                         }
+                        RenderSystem.setShaderFogStart(f2);
+                        RenderSystem.setShaderFogEnd(f3);
+                    }
+                }
+            }
+        }
+        if (!FogTweaker.biomeOverrides.contains(biome)) {
+            assert biome != null;
+            if (BiomeConfigReader.doesBiomeConfigExist(biome)) {
+                if (Configuration.getFogParticlesEnabled() && BiomeConfigReader.readBiomeConfig(biome).isParticlesEnabled() && !Minecraft.getInstance().isPaused()) {
+                    Random random = event.getCamera().getEntity().getLevel().getRandom();
+                    for (int i = 0; i < BiomeConfigReader.readBiomeConfig(biome).getParticleAmount(); i++) {
+                        Vec3 vec = event.getCamera().getEntity().position().add(0, random.nextDouble() * 3D, 0).add(new Vec3(random.nextDouble() * 3D, 0D, 0D).yRot((float) Math.toRadians(random.nextInt(360))));
+                        event.getCamera().getEntity().level.addParticle((ParticleOptions) Objects.requireNonNull(ForgeRegistries.PARTICLE_TYPES.getValue(new ResourceLocation(BiomeConfigReader.readBiomeConfig(biome).getParticleType()))), vec.x, vec.y, vec.z, 0, 0, 0);
                     }
                 }
             }
