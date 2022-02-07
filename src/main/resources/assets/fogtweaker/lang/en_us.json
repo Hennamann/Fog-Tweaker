@@ -6,6 +6,5 @@
   "config.client.fogtweaker.fogparticlesenabled": "Fog Particles Enabled",
   "config.client.fogtweaker.incompatiblemodswarning": "Incompatible Mods Warning",
   "config.common.fogtweaker.poisonousFog": "Poisonous Fog",
-  "error.fogtweaker.incompatiblemod.mistcore": "Fog Tweaker detected that the mod \"Mist Core\" is installed, this mod is not compatible with Fog Tweaker due to shared conflicting code and it will cause issues. It is recommended to remove the mod. You have been warned!",
   "error.fogtweaker.incompatiblemod.optifine": "Fog Tweaker has detected that Optifine is installed, Optifine is not compatible with Fog Tweaker and will cause issues when rendering fog. It is recommended to remove Optifine when using Fog Tweaker. You have been warned!"
 }

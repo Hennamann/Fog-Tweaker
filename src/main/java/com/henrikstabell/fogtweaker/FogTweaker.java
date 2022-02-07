@@ -67,7 +67,7 @@ public class FogTweaker {
     }
 
     private void setup(final FMLCommonSetupEvent event) {
-        List<String> incompatibleMods = List.of("mistcore");
+        List<String> incompatibleMods = List.of("");
 
         for (String incompatibleMod : incompatibleMods) {
             if (Configuration.getIncompatibleModsWarningEnabled()) {
