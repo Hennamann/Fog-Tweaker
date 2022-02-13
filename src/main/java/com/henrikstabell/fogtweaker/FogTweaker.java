@@ -1,7 +1,8 @@
 package com.henrikstabell.fogtweaker;
 
 import com.henrikstabell.fogtweaker.config.Configuration;
-import com.henrikstabell.fogtweaker.config.biomesconfig.BiomeConfigWriter;
+import com.henrikstabell.fogtweaker.config.biomeconfig.BiomeConfigWriter;
+import com.henrikstabell.fogtweaker.config.biomeconfig.BiomeConfig;
 import com.henrikstabell.fogtweaker.util.OptiFineUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
@@ -51,6 +52,9 @@ public class FogTweaker {
         if (!biomeOverrides.isEmpty()) {
             LOGGER.info("Fog Tweaker: The following biomes are blacklisted and will not have fog: " + biomeOverrides);
         }
+        LOGGER.info("Fog Tweaker: Reading Biome Configs…");
+        BiomeConfig.readBiomeConfigs();
+        LOGGER.info("Fog Tweaker: Finished Reading Biome Configs");
         LOGGER.info("Fog Tweaker: \"Load Complete\" Event Complete!");
     }
 

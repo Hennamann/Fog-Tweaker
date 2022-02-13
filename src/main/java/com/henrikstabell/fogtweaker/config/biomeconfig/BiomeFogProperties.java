@@ -1,6 +1,4 @@
-package com.henrikstabell.fogtweaker.config.biomesconfig;
-
-import net.minecraft.resources.ResourceLocation;
+package com.henrikstabell.fogtweaker.config.biomeconfig;
 
 /**
  * Used for JSON config generation and reading.
@@ -8,24 +6,19 @@ import net.minecraft.resources.ResourceLocation;
 public class BiomeFogProperties {
 
     // Fog Related Options
-    private boolean fogEnabled;
-    private float fogDensity;
-    private String fogColor;
+    private final boolean fogEnabled;
+    private final float fogDensity;
+    private final String fogColor;
 
     // Fog Particle Related Options
-    private boolean particlesEnabled;
-    private String particleType;
-    private int particleAmount;
+    private final boolean particlesEnabled;
+    private final String particleType;
+    private final int particleAmount;
 
     // Poison Related Options
-    private boolean poisonousFogEnabled;
-    private int poisonTicks;
-    private int poisonDamage;
-
-    // Purely for utility… Not used in actual code.
-    private String _comment;
-
-    public BiomeFogProperties() {}
+    private final boolean poisonousFogEnabled;
+    private final int poisonTicks;
+    private final int poisonDamage;
 
     public BiomeFogProperties(boolean fogEnabled, float fogDensity, String fogColor, boolean particlesEnabled, String particleType, int particleAmount, boolean poisonousFogEnabled, int poisonTicks, int poisonDamage, String _comment) {
         this.fogEnabled = fogEnabled;
@@ -37,7 +30,6 @@ public class BiomeFogProperties {
         this.poisonousFogEnabled = poisonousFogEnabled;
         this.poisonTicks = poisonTicks;
         this.poisonDamage = poisonDamage;
-        this._comment = _comment;
     }
 
     public boolean isFogEnabled() {

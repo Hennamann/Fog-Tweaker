@@ -2,7 +2,7 @@ package com.henrikstabell.fogtweaker.handler;
 
 import com.henrikstabell.fogtweaker.FogTweaker;
 import com.henrikstabell.fogtweaker.config.Configuration;
-import com.henrikstabell.fogtweaker.config.biomesconfig.BiomeConfigReader;
+import com.henrikstabell.fogtweaker.config.biomeconfig.BiomeConfig;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.FogRenderer;
@@ -37,11 +37,8 @@ public class FogEventHandler {
 
         if (!FogTweaker.biomeOverrides.contains(biome)) {
             if (Configuration.getFogEnabled()) {
-                assert biome != null;
-                if (BiomeConfigReader.doesBiomeConfigExist(biome)) {
-                    boolean fogEnabled = BiomeConfigReader.readBiomeConfig(biome).isFogEnabled();
-                    if (fogEnabled) {
-                        String fogColorString = BiomeConfigReader.readBiomeConfig(biome).getFogColor();
+                if (BiomeConfig.getBiomeConfigFor(biome).isFogEnabled()) {
+                        String fogColorString = BiomeConfig.getBiomeConfigFor(biome).getFogColor();
                         Color fogColor = Color.decode(fogColorString);
 
                         float red = fogColor.getRed();
@@ -57,7 +54,6 @@ public class FogEventHandler {
                 }
             }
         }
-    }
 
     @SubscribeEvent
     public static void onRenderFog(EntityViewRenderEvent.RenderFogEvent event) {
@@ -70,11 +66,8 @@ public class FogEventHandler {
 
         if (Configuration.getFogEnabled()) {
             if (!FogTweaker.biomeOverrides.contains(biome)) {
-                assert biome != null;
-                if (BiomeConfigReader.doesBiomeConfigExist(biome)) {
-                    boolean fogEnabled = BiomeConfigReader.readBiomeConfig(biome).isFogEnabled();
-                    float configFogDensity = BiomeConfigReader.readBiomeConfig(biome).getFogDensity();
-                    if (fogEnabled) {
+                    if (BiomeConfig.getBiomeConfigFor(biome).isFogEnabled()) {
+                        float configFogDensity = BiomeConfig.getBiomeConfigFor(biome).getFogDensity();
                         float f2;
                         float f3;
                         if (fogtype == FogType.LAVA) {
@@ -117,20 +110,16 @@ public class FogEventHandler {
                         RenderSystem.setShaderFogStart(f2);
                         RenderSystem.setShaderFogEnd(f3);
                     }
-                }
             }
         }
         if (!FogTweaker.biomeOverrides.contains(biome)) {
-            assert biome != null;
-            if (BiomeConfigReader.doesBiomeConfigExist(biome)) {
-                if (Configuration.getFogParticlesEnabled() && BiomeConfigReader.readBiomeConfig(biome).isParticlesEnabled() && !Minecraft.getInstance().isPaused()) {
+                if (Configuration.getFogParticlesEnabled() && BiomeConfig.getBiomeConfigFor(biome).isParticlesEnabled() && !Minecraft.getInstance().isPaused()) {
                     Random random = event.getCamera().getEntity().getLevel().getRandom();
-                    for (int i = 0; i < BiomeConfigReader.readBiomeConfig(biome).getParticleAmount(); i++) {
+                    for (int i = 0; i < BiomeConfig.getBiomeConfigFor(biome).getParticleAmount(); i++) {
                         Vec3 vec = event.getCamera().getEntity().position().add(0, random.nextDouble() * 3D, 0).add(new Vec3(random.nextDouble() * 3D, 0D, 0D).yRot((float) Math.toRadians(random.nextInt(360))));
-                        event.getCamera().getEntity().level.addParticle((ParticleOptions) Objects.requireNonNull(ForgeRegistries.PARTICLE_TYPES.getValue(new ResourceLocation(BiomeConfigReader.readBiomeConfig(biome).getParticleType()))), vec.x, vec.y, vec.z, 0, 0, 0);
+                        event.getCamera().getEntity().level.addParticle((ParticleOptions) Objects.requireNonNull(ForgeRegistries.PARTICLE_TYPES.getValue(new ResourceLocation(BiomeConfig.getBiomeConfigFor(biome).getParticleType()))), vec.x, vec.y, vec.z, 0, 0, 0);
                     }
                 }
-            }
         }
     }
 }

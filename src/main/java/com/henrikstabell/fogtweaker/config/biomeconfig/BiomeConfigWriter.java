@@ -1,4 +1,4 @@
-package com.henrikstabell.fogtweaker.config.biomesconfig;
+package com.henrikstabell.fogtweaker.config.biomeconfig;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -24,9 +24,7 @@ public class BiomeConfigWriter {
      * can use.
      */
     public static void genBiomeConfigs() {
-        Gson gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .create();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
         Set<ResourceLocation> biomes = ForgeRegistries.BIOMES.getKeys();
 
@@ -77,7 +75,6 @@ public class BiomeConfigWriter {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
         FogTweaker.LOGGER.info("Fog Tweaker: Finished Generating/Updating Biome configs.");
     }
