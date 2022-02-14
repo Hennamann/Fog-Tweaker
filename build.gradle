@@ -208,13 +208,23 @@ task deobfJar(type: Jar) {
     archiveClassifier.set("deobf")
 }
 
-task exportJavadoc(type: Javadoc) {
-    source = sourceSets.main.allSource
-}
-
 task copyBuildXml(type: Copy) {
     from 'build.properties'
     into 'output'
+}
+
+javadoc {
+    delete 'build/docs/javadoc'
+    options.encoding("UTF-8")
+    options.addStringOption("docencoding", "utf-8")
+    options.addStringOption("charset", "utf-8")
+    //options.stylesheetFile = new File(projectDir, "javadoc_style.css")
+}
+
+task copyJavadoc(type: Copy) {
+    dependsOn javadoc
+    from 'build/docs/javadoc'
+    into 'docs'
 }
 
 jar.finalizedBy('reobfJar')

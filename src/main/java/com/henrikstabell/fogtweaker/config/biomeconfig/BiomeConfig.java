@@ -52,7 +52,7 @@ public class BiomeConfig {
     /**
      * Used to get the Biome Config for the given biome from the {@link com.henrikstabell.fogtweaker.config.biomeconfig.BiomeConfig#BIOME_CONFIGS} map.
      *
-     * @param biomeKey
+     * @param biomeKey {@link net.minecraft.resources.ResourceLocation}
      * @return {@link com.henrikstabell.fogtweaker.config.biomeconfig.BiomeFogProperties}
      */
     public static BiomeFogProperties getBiomeConfigFor(ResourceLocation biomeKey) {
