@@ -3,7 +3,6 @@ package com.henrikstabell.fogtweaker.config.biomeconfig;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.henrikstabell.fogtweaker.FogTweaker;
-import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -14,8 +13,6 @@ import java.io.Writer;
 import java.util.Set;
 
 public class BiomeConfigWriter {
-
-    private static final File configDir = new File(Minecraft.getInstance().gameDirectory + "/config/fogtweaker/biomes");
 
     /**
      * Creates a JSON config file for every biome registered in the Forge Biome Registry.
@@ -28,48 +25,48 @@ public class BiomeConfigWriter {
 
         Set<ResourceLocation> biomes = ForgeRegistries.BIOMES.getKeys();
 
-        File directory = new File(configDir.toString());
+        File directory = new File(BiomeConfig.CONFIG_DIR.toString());
         if (!directory.exists()) {
             directory.mkdirs();
         }
         try {
-            if (!new File(configDir + "/README.txt").exists()) {
-                FileWriter readmeWriter = new FileWriter(configDir + "/README.txt");
-                readmeWriter.write("For more info on editing the configs located here check the wiki: https://github.com/Hennamann/Fog-Tweaker/wiki/Getting-Started-with-the-Config");
-                readmeWriter.close();
+            if (!new File(BiomeConfig.CONFIG_DIR + "/README.txt").exists()) {
+                FileWriter readMeWriter = new FileWriter(BiomeConfig.CONFIG_DIR + "/README.txt");
+                readMeWriter.write("For more info on editing the configs located here check the wiki: https://github.com/Hennamann/Fog-Tweaker/wiki/Getting-Started-with-the-Config");
+                readMeWriter.close();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
         try {
             if (!FogTweaker.biomeOverrides.isEmpty()) {
-                Writer writer = new FileWriter(configDir + "/overridden_biomes.json");
-                gson.toJson(FogTweaker.biomeOverrides, writer);
-                writer.close();
+                Writer overiddenBiomesWriter = new FileWriter(BiomeConfig.CONFIG_DIR + "/overridden_biomes.json");
+                gson.toJson(FogTweaker.biomeOverrides, overiddenBiomesWriter);
+                overiddenBiomesWriter.close();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
         try {
-            Writer writer = new FileWriter(configDir + "/particle_types.json");
-            gson.toJson(ForgeRegistries.PARTICLE_TYPES.getKeys(), writer);
-            writer.close();
+            Writer particleTypesWriter = new FileWriter(BiomeConfig.CONFIG_DIR + "/particle_types.json");
+            gson.toJson(ForgeRegistries.PARTICLE_TYPES.getKeys(), particleTypesWriter);
+            particleTypesWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
         for (ResourceLocation biome : biomes) {
-            File namespaceDir = new File(configDir + "/" + biome.getNamespace());
+            File namespaceDir = new File(BiomeConfig.CONFIG_DIR + "/" + biome.getNamespace());
             try {
                 if (!namespaceDir.exists()) {
                     namespaceDir.mkdir();
                 }
-                File jsonFile = new File(configDir + "/" + biome.getNamespace() + "/" + biome.getPath() + ".json");
+                File jsonFile = new File(BiomeConfig.CONFIG_DIR + "/" + biome.getNamespace() + "/" + biome.getPath() + ".json");
                 if (!jsonFile.exists()) {
                     if (!FogTweaker.biomeOverrides.contains(biome)) {
-                        Writer writer = new FileWriter(configDir + "/" + biome.getNamespace() + "/" + biome.getPath() + ".json");
+                        Writer biomeConfigWriter = new FileWriter(BiomeConfig.CONFIG_DIR + "/" + biome.getNamespace() + "/" + biome.getPath() + ".json");
                         BiomeFogProperties fogProperties = new BiomeFogProperties(false, 6F, "#FFFFFF", false, "minecraft:ash", 15, false, 1200, 1, biome.getNamespace() + ":" + biome.getPath());
-                        gson.toJson(fogProperties, writer);
-                        writer.close();
+                        gson.toJson(fogProperties, biomeConfigWriter);
+                        biomeConfigWriter.close();
                     }
                 }
             } catch (IOException e) {
