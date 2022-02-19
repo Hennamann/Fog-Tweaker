@@ -223,6 +223,7 @@ javadoc {
 }
 
 task copyJavadoc(type: Copy) {
+    group = 'documentation'
     dependsOn javadoc
     from 'build/docs/javadoc'
     into 'docs'

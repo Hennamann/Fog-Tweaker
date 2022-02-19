@@ -43,7 +43,7 @@ loadScripts(document, 'script');</script>
 <div>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested-class-summary">Nested</a>&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor-summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
@@ -80,6 +80,23 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<li>
+<section class="nested-class-summary" id="nested-class-summary">
+<h2>Nested Class Summary</h2>
+<div class="caption"><span>Nested Classes</span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Class</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>static class&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="BiomeConfigWriter.BiomeFogProperties.html" class="type-name-link" title="class in com.henrikstabell.fogtweaker.config.biomeconfig">BiomeConfigWriter.BiomeFogProperties</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Used for JSON config generation and reading.</div>
+</div>
+</div>
+</section>
+</li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <li>
 <section class="constructor-summary" id="constructor-summary">
@@ -105,9 +122,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#genBiomeConfigs()" class="member-name-link">genBiomeConfigs</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#genBiomeConfigs(net.minecraft.world.level.LevelAccessor)" class="member-name-link">genBiomeConfigs</a><wbr>(net.minecraft.world.level.LevelAccessor&nbsp;world)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Creates a JSON config file for every biome registered in the Forge Biome Registry.</div>
+<div class="block">Creates a JSON config file for every biome registered in the Biome Registry.</div>
 </div>
 </div>
 </div>
@@ -141,11 +158,11 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="genBiomeConfigs()">
+<section class="detail" id="genBiomeConfigs(net.minecraft.world.level.LevelAccessor)">
 <h3>genBiomeConfigs</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">genBiomeConfigs</span>()</div>
-<div class="block">Creates a JSON config file for every biome registered in the Forge Biome Registry.
- <code>ForgeRegistries.BIOMES</code>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">genBiomeConfigs</span><wbr><span class="parameters">(net.minecraft.world.level.LevelAccessor&nbsp;world)</span></div>
+<div class="block">Creates a JSON config file for every biome registered in the Biome Registry.
+ <code>Registry.BIOME_REGISTRY</code>
  It also creates a few extra files as a utility for players. ex. particle_types.json which contains all registered particles that fog tweaker
  can use.</div>
 </section>

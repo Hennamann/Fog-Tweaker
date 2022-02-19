@@ -119,13 +119,13 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="BiomeFogProperties.html" title="class in com.henrikstabell.fogtweaker.config.biomeconfig">BiomeFogProperties</a></code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="BiomeConfigWriter.BiomeFogProperties.html" title="class in com.henrikstabell.fogtweaker.config.biomeconfig">BiomeConfigWriter.BiomeFogProperties</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getBiomeConfigFor(net.minecraft.resources.ResourceLocation)" class="member-name-link">getBiomeConfigFor</a><wbr>(net.minecraft.resources.ResourceLocation&nbsp;biomeKey)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Used to get the Biome Config for the given biome from the <code>BIOME_CONFIGS</code> map.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#readBiomeConfigs()" class="member-name-link">readBiomeConfigs</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#readBiomeConfigs(net.minecraft.world.level.LevelAccessor)" class="member-name-link">readBiomeConfigs</a><wbr>(net.minecraft.world.level.LevelAccessor&nbsp;world)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Gets all the generated JSON Biome config files and loads them into a HashMap <code>BIOME_CONFIGS</code>
  for use in a static context.</div>
@@ -181,9 +181,9 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="readBiomeConfigs()">
+<section class="detail" id="readBiomeConfigs(net.minecraft.world.level.LevelAccessor)">
 <h3>readBiomeConfigs</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">readBiomeConfigs</span>()</div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">readBiomeConfigs</span><wbr><span class="parameters">(net.minecraft.world.level.LevelAccessor&nbsp;world)</span></div>
 <div class="block">Gets all the generated JSON Biome config files and loads them into a HashMap <code>BIOME_CONFIGS</code>
  for use in a static context. Also sets up File Watchers using <code>FileWatcher</code>
  to update the configs whenever a JSON config file is changed.</div>
@@ -207,13 +207,13 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="getBiomeConfigFor(net.minecraft.resources.ResourceLocation)">
 <h3>getBiomeConfigFor</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="BiomeFogProperties.html" title="class in com.henrikstabell.fogtweaker.config.biomeconfig">BiomeFogProperties</a></span>&nbsp;<span class="element-name">getBiomeConfigFor</span><wbr><span class="parameters">(net.minecraft.resources.ResourceLocation&nbsp;biomeKey)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="BiomeConfigWriter.BiomeFogProperties.html" title="class in com.henrikstabell.fogtweaker.config.biomeconfig">BiomeConfigWriter.BiomeFogProperties</a></span>&nbsp;<span class="element-name">getBiomeConfigFor</span><wbr><span class="parameters">(net.minecraft.resources.ResourceLocation&nbsp;biomeKey)</span></div>
 <div class="block">Used to get the Biome Config for the given biome from the <code>BIOME_CONFIGS</code> map.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>biomeKey</code> - <code>ResourceLocation</code></dd>
 <dt>Returns:</dt>
-<dd><a href="BiomeFogProperties.html" title="class in com.henrikstabell.fogtweaker.config.biomeconfig"><code>BiomeFogProperties</code></a></dd>
+<dd><a href="BiomeConfigWriter.BiomeFogProperties.html" title="class in com.henrikstabell.fogtweaker.config.biomeconfig"><code>BiomeConfigWriter.BiomeFogProperties</code></a></dd>
 </dl>
 </section>
 </li>
