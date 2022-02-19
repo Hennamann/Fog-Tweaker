@@ -19,15 +19,15 @@ public class BiomeConfigReader {
      * to avoid performance issues.
      *
      * @param biomeKey {@link net.minecraft.resources.ResourceLocation}
-     * @return a new instance of {@link com.henrikstabell.fogtweaker.config.biomeconfig.BiomeFogProperties} created from the relevant
+     * @return a new instance of {@link com.henrikstabell.fogtweaker.config.biomeconfig.BiomeConfigWriter.BiomeFogProperties} created from the relevant
      * JSON file.
      */
-    protected static BiomeFogProperties readBiomeConfig(ResourceLocation biomeKey) {
+    protected static BiomeConfigWriter.BiomeFogProperties readBiomeConfig(ResourceLocation biomeKey) {
 
-        BiomeFogProperties biomeFogProps;
+        BiomeConfigWriter.BiomeFogProperties fogProperties;
 
         if (biomeKey == null) {
-            return new BiomeFogProperties(false, 6F, "#FFFFFF", false, "minecraft:ash", 15, false, 1200, 1, biomeKey.getNamespace() + ":" + biomeKey.getPath());
+            return new BiomeConfigWriter.BiomeFogProperties(false, 6F, "#FFFFFF", false, "minecraft:ash", 15, false, 1200, 1, biomeKey.getNamespace() + ":" + biomeKey.getPath());
         }
         try {
             Gson gson = new Gson();
@@ -35,18 +35,18 @@ public class BiomeConfigReader {
             File allBiomesFile = new File(BiomeConfig.CONFIG_DIR + "/" + "all_biomes.json"); // Override to set the same settings for every biome.
             if (allBiomesFile.exists()) {
                 Reader allBiomesFileReader = Files.newBufferedReader(Paths.get(BiomeConfig.CONFIG_DIR + "/" + "all_biomes.json"));
-                biomeFogProps = gson.fromJson(allBiomesFileReader, BiomeFogProperties.class);
+                fogProperties = gson.fromJson(allBiomesFileReader, BiomeConfigWriter.BiomeFogProperties.class);
                 allBiomesFileReader.close();
             } else {
                 Reader biomeConfigReader = Files.newBufferedReader(Paths.get(BiomeConfig.CONFIG_DIR + "/" + biomeKey.getNamespace() + "/" + biomeKey.getPath() + ".json"));
-                biomeFogProps = gson.fromJson(biomeConfigReader, BiomeFogProperties.class);
+                fogProperties = gson.fromJson(biomeConfigReader, BiomeConfigWriter.BiomeFogProperties.class);
                 biomeConfigReader.close();
             }
-            return biomeFogProps;
+            return fogProperties;
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new BiomeFogProperties(false, 6F, "#FFFFFF", false, "minecraft:ash", 15, false, 1200, 1, biomeKey.getNamespace() + ":" + biomeKey.getPath());
+        return new BiomeConfigWriter.BiomeFogProperties(false, 6F, "#FFFFFF", false, "minecraft:ash", 15, false, 1200, 1, biomeKey.getNamespace() + ":" + biomeKey.getPath());
     }
 
     /**

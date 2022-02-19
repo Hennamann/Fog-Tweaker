@@ -1,9 +1,10 @@
 package com.henrikstabell.fogtweaker.config.biomeconfig;
 
 import com.electronwill.nightconfig.core.file.FileWatcher;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.fml.loading.FMLPaths;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,15 +15,15 @@ public class BiomeConfig {
 
     public static final File CONFIG_DIR = new File(FMLPaths.CONFIGDIR.get() + "/fogtweaker/biomes");
 
-    private static final Map<ResourceLocation, BiomeFogProperties> BIOME_CONFIGS = new HashMap<>();
+    private static final Map<ResourceLocation, BiomeConfigWriter.BiomeFogProperties> BIOME_CONFIGS = new HashMap<>();
 
     /**
      * Gets all the generated JSON Biome config files and loads them into a HashMap {@link com.henrikstabell.fogtweaker.config.biomeconfig.BiomeConfig#BIOME_CONFIGS}
      * for use in a static context. Also sets up File Watchers using {@link com.electronwill.nightconfig.core.file.FileWatcher}
      * to update the configs whenever a JSON config file is changed.
      */
-    public static void readBiomeConfigs() {
-        Set<ResourceLocation> biomes = ForgeRegistries.BIOMES.getKeys();
+    public static void readBiomeConfigs(LevelAccessor world) {
+        Set<ResourceLocation> biomes = world.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).keySet();
 
         for (ResourceLocation biome : biomes) {
             if (BiomeConfigReader.doesBiomeConfigExist(biome)) {
@@ -53,9 +54,9 @@ public class BiomeConfig {
      * Used to get the Biome Config for the given biome from the {@link com.henrikstabell.fogtweaker.config.biomeconfig.BiomeConfig#BIOME_CONFIGS} map.
      *
      * @param biomeKey {@link net.minecraft.resources.ResourceLocation}
-     * @return {@link com.henrikstabell.fogtweaker.config.biomeconfig.BiomeFogProperties}
+     * @return {@link com.henrikstabell.fogtweaker.config.biomeconfig.BiomeConfigWriter.BiomeFogProperties}
      */
-    public static BiomeFogProperties getBiomeConfigFor(ResourceLocation biomeKey) {
+    public static BiomeConfigWriter.BiomeFogProperties getBiomeConfigFor(ResourceLocation biomeKey) {
         return BIOME_CONFIGS.get(biomeKey);
     }
 }

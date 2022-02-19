@@ -3,8 +3,9 @@ package com.henrikstabell.fogtweaker.config.biomeconfig;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.henrikstabell.fogtweaker.FogTweaker;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.SimpleReloadableResourceManager;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.io.File;
@@ -16,15 +17,15 @@ import java.util.Set;
 public class BiomeConfigWriter {
 
     /**
-     * Creates a JSON config file for every biome registered in the Forge Biome Registry.
-     * {@link net.minecraftforge.registries.ForgeRegistries#BIOMES}
+     * Creates a JSON config file for every biome registered in the Biome Registry.
+     * {@link net.minecraft.core.Registry#BIOME_REGISTRY}
      * It also creates a few extra files as a utility for players. ex. particle_types.json which contains all registered particles that fog tweaker
      * can use.
      */
-    public static void genBiomeConfigs() {
+    public static void genBiomeConfigs(LevelAccessor world) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-        Set<ResourceLocation> biomes = ForgeRegistries.BIOMES.getKeys();
+        Set<ResourceLocation> biomes = world.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).keySet();
 
         File directory = new File(BiomeConfig.CONFIG_DIR.toString());
         if (!directory.exists()) {
@@ -40,9 +41,9 @@ public class BiomeConfigWriter {
             e.printStackTrace();
         }
         try {
-            if (!FogTweaker.biomeOverrides.isEmpty()) {
+            if (!FogTweaker.BIOME_OVERRIDES.isEmpty()) {
                 Writer overiddenBiomesWriter = new FileWriter(BiomeConfig.CONFIG_DIR + "/overridden_biomes.json");
-                gson.toJson(FogTweaker.biomeOverrides, overiddenBiomesWriter);
+                gson.toJson(FogTweaker.BIOME_OVERRIDES, overiddenBiomesWriter);
                 overiddenBiomesWriter.close();
             }
         } catch (IOException e) {
@@ -56,15 +57,12 @@ public class BiomeConfigWriter {
             e.printStackTrace();
         }
         for (ResourceLocation biome : biomes) {
-            File namespaceDir = new File(BiomeConfig.CONFIG_DIR + "/" + biome.getNamespace());
             try {
-                if (!namespaceDir.exists()) {
-                    namespaceDir.mkdir();
-                }
                 File jsonFile = new File(BiomeConfig.CONFIG_DIR + "/" + biome.getNamespace() + "/" + biome.getPath() + ".json");
                 if (!jsonFile.exists()) {
-                    if (!FogTweaker.biomeOverrides.contains(biome)) {
-                        Writer biomeConfigWriter = new FileWriter(BiomeConfig.CONFIG_DIR + "/" + biome.getNamespace() + "/" + biome.getPath() + ".json");
+                    if (!FogTweaker.BIOME_OVERRIDES.contains(biome)) {
+                        jsonFile.getParentFile().mkdirs();
+                        Writer biomeConfigWriter = new FileWriter(jsonFile);
                         BiomeFogProperties fogProperties = new BiomeFogProperties(false, 6F, "#FFFFFF", false, "minecraft:ash", 15, false, 1200, 1, biome.getNamespace() + ":" + biome.getPath());
                         gson.toJson(fogProperties, biomeConfigWriter);
                         biomeConfigWriter.close();
@@ -75,5 +73,77 @@ public class BiomeConfigWriter {
             }
         }
         FogTweaker.LOGGER.info("Fog Tweaker: Finished Generating/Updating Biome configs.");
+    }
+    /**
+     * Used for JSON config generation and reading.
+     */
+    public static class BiomeFogProperties {
+
+        // Fog Related Options
+        private final boolean fogEnabled;
+        private final float fogDensity;
+        private final String fogColor;
+
+        // Fog Particle Related Options
+        private final boolean particlesEnabled;
+        private final String particleType;
+        private final int particleAmount;
+
+        // Poison Related Options
+        private final boolean poisonousFogEnabled;
+        private final int poisonTicks;
+        private final int poisonDamage;
+
+        // Misc
+        private final String _comment;
+
+        public BiomeFogProperties(boolean fogEnabled, float fogDensity, String fogColor, boolean particlesEnabled, String particleType, int particleAmount, boolean poisonousFogEnabled, int poisonTicks, int poisonDamage, String _comment) {
+            this.fogEnabled = fogEnabled;
+            this.fogDensity = fogDensity;
+            this.fogColor = fogColor;
+            this.particlesEnabled = particlesEnabled;
+            this.particleType = particleType;
+            this.particleAmount = particleAmount;
+            this.poisonousFogEnabled = poisonousFogEnabled;
+            this.poisonTicks = poisonTicks;
+            this.poisonDamage = poisonDamage;
+            this._comment = _comment;
+        }
+
+        public boolean isFogEnabled() {
+            return fogEnabled;
+        }
+
+        public float getFogDensity() {
+            return fogDensity;
+        }
+
+        public String getFogColor() {
+            return fogColor;
+        }
+
+        public boolean isPoisonousFogEnabled() {
+            return poisonousFogEnabled;
+        }
+
+        public int getPoisonTicks() {
+            return poisonTicks;
+        }
+
+        public int getPoisonDamage() {
+            return poisonDamage;
+        }
+
+        public boolean isParticlesEnabled() {
+            return particlesEnabled;
+        }
+
+        public String getParticleType() {
+            return particleType;
+        }
+
+        public int getParticleAmount() {
+            return particleAmount;
+        }
     }
 }

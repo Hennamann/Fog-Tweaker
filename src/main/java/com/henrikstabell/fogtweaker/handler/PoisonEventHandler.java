@@ -28,22 +28,19 @@ public class PoisonEventHandler {
         ResourceLocation biome = world.getBiome(pos).getRegistryName();
 
         if (Configuration.getPoisonousFogEnabled()) {
-            assert biome != null;
-            if (!biome.getNamespace().equals("terralith")) {
-                if (!FogTweaker.biomeOverrides.contains(biome)) {
-                    int poisonTicks = BiomeConfig.getBiomeConfigFor(biome).getPoisonTicks();
-                    int poisonDamage = BiomeConfig.getBiomeConfigFor(biome).getPoisonDamage();
-                    boolean poisonEnabled = BiomeConfig.getBiomeConfigFor(biome).isPoisonousFogEnabled();
+            if (!FogTweaker.BIOME_OVERRIDES.contains(biome)) {
+                int poisonTicks = BiomeConfig.getBiomeConfigFor(biome).getPoisonTicks();
+                int poisonDamage = BiomeConfig.getBiomeConfigFor(biome).getPoisonDamage();
+                boolean poisonEnabled = BiomeConfig.getBiomeConfigFor(biome).isPoisonousFogEnabled();
 
-                    if (poisonEnabled) {
-                        if (entity.tickCount > poisonTicks)
-                            if (entity instanceof Player) {
-                                if (!((Player) entity).isCreative()) {
-                                    entity.hurt(FogTweaker.DAMAGEFOG, poisonDamage);
-                                }
+                if (poisonEnabled) {
+                    if (entity.tickCount > poisonTicks)
+                        if (entity instanceof Player) {
+                            if (!((Player) entity).isCreative()) {
+                                entity.hurt(FogTweaker.FOG_DAMAGE_SOURCE, poisonDamage);
                             }
-                        entity.hurt(FogTweaker.DAMAGEFOG, poisonDamage);
-                    }
+                        }
+                    entity.hurt(FogTweaker.FOG_DAMAGE_SOURCE, poisonDamage);
                 }
             }
         }
