@@ -4,10 +4,6 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import org.apache.commons.lang3.tuple.Pair;
 
-/**
- * See The repos LICENSE.MD file for what you can and can't do with the code.
- * Created by Hennamann(Ole Henrik Stabell) on 03/04/2018.
- */
 public class Configuration {
 
     public static final ForgeConfigSpec clientSpec;

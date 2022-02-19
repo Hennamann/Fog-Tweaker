@@ -219,7 +219,7 @@ javadoc {
     options.encoding("UTF-8")
     options.addStringOption("docencoding", "utf-8")
     options.addStringOption("charset", "utf-8")
-    //options.stylesheetFile = new File(projectDir, "javadoc_style.css"). TODO: Need to make a custom stylesheet for java 17/18…
+    options.stylesheetFile = new File(projectDir, "javadoc_style.css")
 }
 
 task copyJavadoc(type: Copy) {

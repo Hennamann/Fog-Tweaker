@@ -26,10 +26,6 @@ import java.util.stream.Stream;
 
 import static com.henrikstabell.fogtweaker.FogTweaker.MODID;
 
-/**
- * See The repos LICENSE.MD file for what you can and can't do with the code.
- * Created by Hennamann(Ole Henrik Stabell) on 03/04/2018.
- */
 @Mod(MODID)
 public class FogTweaker {
 
