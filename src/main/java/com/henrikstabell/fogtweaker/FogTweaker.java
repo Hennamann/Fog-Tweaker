@@ -4,6 +4,7 @@ import com.henrikstabell.fogtweaker.config.Configuration;
 import com.henrikstabell.fogtweaker.config.biomeconfig.BiomeConfigWriter;
 import com.henrikstabell.fogtweaker.config.biomeconfig.BiomeConfig;
 import com.henrikstabell.fogtweaker.util.OptiFineUtil;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraftforge.fml.*;

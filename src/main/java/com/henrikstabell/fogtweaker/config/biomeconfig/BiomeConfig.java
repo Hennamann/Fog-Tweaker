@@ -12,7 +12,7 @@ import java.util.*;
 
 public class BiomeConfig {
 
-    public static final File CONFIG_DIR = new File(FMLPaths.CONFIGDIR + "/fogtweaker/biomes");
+    public static final File CONFIG_DIR = new File(FMLPaths.CONFIGDIR.get() + "/fogtweaker/biomes");
 
     private static final Map<ResourceLocation, BiomeFogProperties> BIOME_CONFIGS = new HashMap<>();
 

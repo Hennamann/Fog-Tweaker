@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.henrikstabell.fogtweaker.FogTweaker;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.SimpleReloadableResourceManager;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.io.File;

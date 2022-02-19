@@ -35,9 +35,11 @@ public class FogEventHandler {
         BlockPos pos = event.getCamera().getBlockPosition();
         ResourceLocation biome = world.getBiome(pos).getRegistryName();
 
-        if (!FogTweaker.biomeOverrides.contains(biome)) {
-            if (Configuration.getFogEnabled()) {
-                if (BiomeConfig.getBiomeConfigFor(biome).isFogEnabled()) {
+        assert biome != null;
+        if (!biome.getNamespace().equals("terralith")) {
+            if (!FogTweaker.biomeOverrides.contains(biome)) {
+                if (Configuration.getFogEnabled()) {
+                    if (BiomeConfig.getBiomeConfigFor(biome).isFogEnabled()) {
                         String fogColorString = BiomeConfig.getBiomeConfigFor(biome).getFogColor();
                         Color fogColor = Color.decode(fogColorString);
 
@@ -54,6 +56,7 @@ public class FogEventHandler {
                 }
             }
         }
+    }
 
     @SubscribeEvent
     public static void onRenderFog(EntityViewRenderEvent.RenderFogEvent event) {
@@ -65,7 +68,9 @@ public class FogEventHandler {
         Entity entity = event.getCamera().getEntity();
 
         if (Configuration.getFogEnabled()) {
-            if (!FogTweaker.biomeOverrides.contains(biome)) {
+            assert biome != null;
+            if (!biome.getNamespace().equals("terralith")) {
+                if (!FogTweaker.biomeOverrides.contains(biome)) {
                     if (BiomeConfig.getBiomeConfigFor(biome).isFogEnabled()) {
                         float configFogDensity = BiomeConfig.getBiomeConfigFor(biome).getFogDensity();
                         float f2;
@@ -110,9 +115,12 @@ public class FogEventHandler {
                         RenderSystem.setShaderFogStart(f2);
                         RenderSystem.setShaderFogEnd(f3);
                     }
+                }
             }
         }
-        if (!FogTweaker.biomeOverrides.contains(biome)) {
+        assert biome != null;
+        if (!biome.getNamespace().equals("terralith")) {
+            if (!FogTweaker.biomeOverrides.contains(biome)) {
                 if (Configuration.getFogParticlesEnabled() && BiomeConfig.getBiomeConfigFor(biome).isParticlesEnabled() && !Minecraft.getInstance().isPaused()) {
                     Random random = event.getCamera().getEntity().getLevel().getRandom();
                     for (int i = 0; i < BiomeConfig.getBiomeConfigFor(biome).getParticleAmount(); i++) {
@@ -120,6 +128,7 @@ public class FogEventHandler {
                         event.getCamera().getEntity().level.addParticle((ParticleOptions) Objects.requireNonNull(ForgeRegistries.PARTICLE_TYPES.getValue(new ResourceLocation(BiomeConfig.getBiomeConfigFor(biome).getParticleType()))), vec.x, vec.y, vec.z, 0, 0, 0);
                     }
                 }
+            }
         }
     }
 }

@@ -165,6 +165,7 @@ dependencies {
     runtimeOnly fg.deobf("curse.maven:biomes-o-plenty-220318:${config.bopId}")
     runtimeOnly fg.deobf("curse.maven:oh-the-biomes-youll-go-247560:${config.bygId}")
     runtimeOnly fg.deobf("curse.maven:natures-compass-252848:${config.naturesCompassId}")
+    runtimeOnly fg.deobf("curse.maven:terralith-513688:${config.terralithId}")
 
     // For testing config compat.
     runtimeOnly fg.deobf("curse.maven:configured-457570:${config.configuredId}")
@@ -218,7 +219,7 @@ javadoc {
     options.encoding("UTF-8")
     options.addStringOption("docencoding", "utf-8")
     options.addStringOption("charset", "utf-8")
-    //options.stylesheetFile = new File(projectDir, "javadoc_style.css")
+    //options.stylesheetFile = new File(projectDir, "javadoc_style.css"). TODO: Need to make a custom stylesheet for java 17/18…
 }
 
 task copyJavadoc(type: Copy) {

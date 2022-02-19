@@ -8,11 +8,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = FogTweaker.MODID)
+@Mod.EventBusSubscriber(modid = FogTweaker.MODID, value = Dist.CLIENT)
 public class PoisonEventHandler {
 
     /**
@@ -27,14 +28,22 @@ public class PoisonEventHandler {
         ResourceLocation biome = world.getBiome(pos).getRegistryName();
 
         if (Configuration.getPoisonousFogEnabled()) {
-            if (!FogTweaker.biomeOverrides.contains(biome)) {
-                int poisonTicks = BiomeConfig.getBiomeConfigFor(biome).getPoisonTicks();
-                int poisonDamage = BiomeConfig.getBiomeConfigFor(biome).getPoisonDamage();
-                boolean poisonEnabled = BiomeConfig.getBiomeConfigFor(biome).isPoisonousFogEnabled();
+            assert biome != null;
+            if (!biome.getNamespace().equals("terralith")) {
+                if (!FogTweaker.biomeOverrides.contains(biome)) {
+                    int poisonTicks = BiomeConfig.getBiomeConfigFor(biome).getPoisonTicks();
+                    int poisonDamage = BiomeConfig.getBiomeConfigFor(biome).getPoisonDamage();
+                    boolean poisonEnabled = BiomeConfig.getBiomeConfigFor(biome).isPoisonousFogEnabled();
 
-                if (poisonEnabled && !((Player) entity).isCreative()) {
-                    if (entity.tickCount > poisonTicks)
+                    if (poisonEnabled) {
+                        if (entity.tickCount > poisonTicks)
+                            if (entity instanceof Player) {
+                                if (!((Player) entity).isCreative()) {
+                                    entity.hurt(FogTweaker.DAMAGEFOG, poisonDamage);
+                                }
+                            }
                         entity.hurt(FogTweaker.DAMAGEFOG, poisonDamage);
+                    }
                 }
             }
         }
