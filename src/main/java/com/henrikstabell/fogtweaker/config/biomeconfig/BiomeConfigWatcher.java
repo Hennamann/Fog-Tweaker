@@ -13,7 +13,7 @@ public class BiomeConfigWatcher implements Runnable {
 
     @Override
     public void run() {
-        FogTweaker.LOGGER.info("Fog Tweaker: Biome Config File for " + biome.toString() + " changed, updating configs…");
+        FogTweaker.LOGGER.info("Fog Tweaker: Biome Config File for " + biome + " changed, updating config…");
         BiomeConfig.updateBiomeConfigFor(biome);
     }
 }

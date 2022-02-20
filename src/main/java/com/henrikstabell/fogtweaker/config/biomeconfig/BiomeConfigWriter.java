@@ -16,14 +16,17 @@ import java.util.Set;
 
 public class BiomeConfigWriter {
 
+    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
     /**
      * Creates a JSON config file for every biome registered in the Biome Registry.
      * {@link net.minecraft.core.Registry#BIOME_REGISTRY}
      * It also creates a few extra files as a utility for players. ex. particle_types.json which contains all registered particles that fog tweaker
      * can use.
+     *
+     * @param world {@link net.minecraft.world.level.LevelAccessor}
      */
     public static void genBiomeConfigs(LevelAccessor world) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
         Set<ResourceLocation> biomes = world.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).keySet();
 
@@ -42,9 +45,9 @@ public class BiomeConfigWriter {
         }
         try {
             if (!FogTweaker.BIOME_OVERRIDES.isEmpty()) {
-                Writer overiddenBiomesWriter = new FileWriter(BiomeConfig.CONFIG_DIR + "/overridden_biomes.json");
-                gson.toJson(FogTweaker.BIOME_OVERRIDES, overiddenBiomesWriter);
-                overiddenBiomesWriter.close();
+                Writer overriddenBiomesWriter = new FileWriter(BiomeConfig.CONFIG_DIR + "/overridden_biomes.json");
+                gson.toJson(FogTweaker.BIOME_OVERRIDES, overriddenBiomesWriter);
+                overriddenBiomesWriter.close();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -74,6 +77,7 @@ public class BiomeConfigWriter {
         }
         FogTweaker.LOGGER.info("Fog Tweaker: Finished Generating/Updating Biome configs.");
     }
+
     /**
      * Used for JSON config generation and reading.
      */

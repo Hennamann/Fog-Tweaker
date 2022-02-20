@@ -1,6 +1,7 @@
 package com.henrikstabell.fogtweaker.config.biomeconfig;
 
 import com.electronwill.nightconfig.core.file.FileWatcher;
+import com.henrikstabell.fogtweaker.FogTweaker;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.LevelAccessor;
@@ -21,6 +22,8 @@ public class BiomeConfig {
      * Gets all the generated JSON Biome config files and loads them into a HashMap {@link com.henrikstabell.fogtweaker.config.biomeconfig.BiomeConfig#BIOME_CONFIGS}
      * for use in a static context. Also sets up File Watchers using {@link com.electronwill.nightconfig.core.file.FileWatcher}
      * to update the configs whenever a JSON config file is changed.
+     *
+     * @param world {@link net.minecraft.world.level.LevelAccessor}
      */
     public static void readBiomeConfigs(LevelAccessor world) {
         Set<ResourceLocation> biomes = world.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).keySet();
@@ -31,7 +34,7 @@ public class BiomeConfig {
                 try {
                     FileWatcher.defaultInstance().addWatch(Paths.get(CONFIG_DIR + "/" + biome.getNamespace() + "/" + biome.getPath() + ".json"), new BiomeConfigWatcher(biome));
                 } catch (IOException e) {
-                    throw new RuntimeException("Failed to watch Biome config file", e);
+                    throw new RuntimeException("Fog Tweaker: Failed to watch Biome Config File", e);
                 }
             }
         }
@@ -48,6 +51,7 @@ public class BiomeConfig {
      */
     protected static void updateBiomeConfigFor(ResourceLocation biomeKey) {
         BIOME_CONFIGS.replace(biomeKey, BiomeConfigReader.readBiomeConfig(biomeKey));
+        FogTweaker.LOGGER.info("Fog Tweaker: Successfully Updated Biome Config for " + biomeKey + "." );
     }
 
     /**

@@ -23,7 +23,6 @@ public class BiomeConfigReader {
      * JSON file.
      */
     protected static BiomeConfigWriter.BiomeFogProperties readBiomeConfig(ResourceLocation biomeKey) {
-
         BiomeConfigWriter.BiomeFogProperties fogProperties;
 
         if (biomeKey == null) {
