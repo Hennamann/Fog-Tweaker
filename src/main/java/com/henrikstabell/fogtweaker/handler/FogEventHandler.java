@@ -10,6 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -17,7 +18,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.FogType;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.EntityViewRenderEvent;
+import net.minecraftforge.client.event.ViewportEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -30,10 +31,10 @@ import java.util.Random;
 public class FogEventHandler {
 
     @SubscribeEvent
-    public static void onRenderFogColors(EntityViewRenderEvent.FogColors event) {
+    public static void onRenderFogColors(ViewportEvent.ComputeFogColor event) {
         Level world = event.getCamera().getEntity().level;
         BlockPos pos = event.getCamera().getBlockPosition();
-        ResourceLocation biome = world.getBiome(pos).getRegistryName();
+        ResourceLocation biome = ForgeRegistries.BIOMES.getKey(world.getBiome(pos).get());
 
         if (!FogTweaker.BIOME_OVERRIDES.contains(biome)) {
             if (Configuration.getFogEnabled()) {
@@ -46,20 +47,17 @@ public class FogEventHandler {
                     float blue = fogColor.getBlue();
 
                     final float[] fogColors = {red / 255F, green / 255F, blue / 255F};
-
-                    event.setRed(fogColors[0]);
-                    event.setGreen(fogColors[1]);
-                    event.setBlue(fogColors[2]);
+                    RenderSystem.setShaderFogColor(fogColors[0], fogColors[1], fogColors[2]);
                 }
             }
         }
     }
 
     @SubscribeEvent
-    public static void onRenderFog(EntityViewRenderEvent.RenderFogEvent event) {
+    public static void onRenderFog(ViewportEvent.RenderFog event) {
         Level world = event.getCamera().getEntity().level;
         BlockPos pos = event.getCamera().getBlockPosition();
-        ResourceLocation biome = world.getBiome(pos).getRegistryName();
+        ResourceLocation biome = ForgeRegistries.BIOMES.getKey(world.getBiome(pos).get());
 
         FogType fogtype = event.getCamera().getFluidInCamera();
         Entity entity = event.getCamera().getEntity();
@@ -114,7 +112,8 @@ public class FogEventHandler {
         }
         if (!FogTweaker.BIOME_OVERRIDES.contains(biome)) {
             if (Configuration.getFogParticlesEnabled() && BiomeConfig.getBiomeConfigFor(biome).isParticlesEnabled() && !Minecraft.getInstance().isPaused()) {
-                Random random = event.getCamera().getEntity().getLevel().getRandom();
+                // TODO does casting this to random even work?
+                Random random = (Random) event.getCamera().getEntity().getLevel().getRandom();
                 for (int i = 0; i < BiomeConfig.getBiomeConfigFor(biome).getParticleAmount(); i++) {
                     Vec3 vec = event.getCamera().getEntity().position().add(0, random.nextDouble() * 3D, 0).add(new Vec3(random.nextDouble() * 3D, 0D, 0D).yRot((float) Math.toRadians(random.nextInt(360))));
                     event.getCamera().getEntity().level.addParticle((ParticleOptions) Objects.requireNonNull(ForgeRegistries.PARTICLE_TYPES.getValue(new ResourceLocation(BiomeConfig.getBiomeConfigFor(biome).getParticleType()))), vec.x, vec.y, vec.z, 0, 0, 0);

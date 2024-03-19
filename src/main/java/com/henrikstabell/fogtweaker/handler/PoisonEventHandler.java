@@ -12,6 +12,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.ForgeRegistries;
 
 @Mod.EventBusSubscriber(modid = FogTweaker.MODID, value = Dist.CLIENT)
 public class PoisonEventHandler {
@@ -21,12 +22,11 @@ public class PoisonEventHandler {
      * Uses the JSON configs to determine if damage should be dealt and how much and how often.
      */
     @SubscribeEvent
-    public static void onPlayerUpdate(LivingEvent.LivingUpdateEvent event) {
-        LivingEntity entity = event.getEntityLiving();
+    public static void onPlayerUpdate(LivingEvent.LivingTickEvent event) {
+        LivingEntity entity = event.getEntity();
         Level world = entity.level;
         BlockPos pos = entity.blockPosition();
-        ResourceLocation biome = world.getBiome(pos).getRegistryName();
-
+        ResourceLocation biome = ForgeRegistries.BIOMES.getKey(world.getBiome(pos).get());
         if (Configuration.getPoisonousFogEnabled()) {
             if (!FogTweaker.BIOME_OVERRIDES.contains(biome)) {
                 int poisonTicks = BiomeConfig.getBiomeConfigFor(biome).getPoisonTicks();

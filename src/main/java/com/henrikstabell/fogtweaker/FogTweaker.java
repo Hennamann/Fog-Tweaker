@@ -7,7 +7,8 @@ import com.henrikstabell.fogtweaker.util.OptiFineUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.event.level.LevelEvent;
+import net.minecraftforge.event.level.LevelEvent.Load;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.fml.*;
 import net.minecraftforge.fml.common.Mod;
@@ -80,11 +81,12 @@ public class FogTweaker {
         }
     }
 
-    private void worldLoad(final WorldEvent.Load event) {
+    private void worldLoad(final LevelEvent.Load event) {
+        // TODO test if this actually works
         LOGGER.info("Fog Tweaker: Generating/Updating Biome configs…");
-        BiomeConfigWriter.genBiomeConfigs(event.getWorld());
+        BiomeConfigWriter.genBiomeConfigs(event.getLevel());
         LOGGER.info("Fog Tweaker: Reading Biome Configs…");
-        BiomeConfig.readBiomeConfigs(event.getWorld());
+        BiomeConfig.readBiomeConfigs(event.getLevel());
         LOGGER.info("Fog Tweaker: Finished Reading Biome Configs");
     }
 }
