@@ -32,7 +32,6 @@ import java.util.Random;
 
 @Mod.EventBusSubscriber(modid = FogTweaker.MODID, value = Dist.CLIENT)
 public class FogEventHandler {
-    private static final Logger LOGGER = LogUtils.getLogger();
 
     @SubscribeEvent
     public static void onRenderFogColors(ViewportEvent.ComputeFogColor event) {
@@ -126,7 +125,7 @@ public class FogEventHandler {
         }
         if (!FogTweaker.BIOME_OVERRIDES.contains(biome)) {
             if (Configuration.getFogParticlesEnabled() && BiomeConfig.getBiomeConfigFor(biome).isParticlesEnabled() && !Minecraft.getInstance().isPaused()) {
-                Random random = (Random) event.getCamera().getEntity().getLevel().getRandom();
+                RandomSource random = event.getCamera().getEntity().getLevel().getRandom();
                 for (int i = 0; i < BiomeConfig.getBiomeConfigFor(biome).getParticleAmount(); i++) {
                     Vec3 vec = event.getCamera().getEntity().position().add(0, random.nextDouble() * 3D, 0).add(new Vec3(random.nextDouble() * 3D, 0D, 0D).yRot((float) Math.toRadians(random.nextInt(360))));
                     event.getCamera().getEntity().level.addParticle((ParticleOptions) Objects.requireNonNull(ForgeRegistries.PARTICLE_TYPES.getValue(new ResourceLocation(BiomeConfig.getBiomeConfigFor(biome).getParticleType()))), vec.x, vec.y, vec.z, 0, 0, 0);
