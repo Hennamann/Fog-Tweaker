@@ -4,6 +4,7 @@ import com.henrikstabell.fogtweaker.FogTweaker;
 import com.henrikstabell.fogtweaker.config.Configuration;
 import com.henrikstabell.fogtweaker.config.biomeconfig.BiomeConfig;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -26,7 +27,7 @@ public class PoisonEventHandler {
         LivingEntity entity = event.getEntity();
         Level world = entity.level;
         BlockPos pos = entity.blockPosition();
-        ResourceLocation biome = ForgeRegistries.BIOMES.getKey(world.getBiome(pos).get());
+        ResourceLocation biome = world.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getKey(world.getBiome(pos).get());
         if (Configuration.getPoisonousFogEnabled()) {
             if (!FogTweaker.BIOME_OVERRIDES.contains(biome)) {
                 int poisonTicks = BiomeConfig.getBiomeConfigFor(biome).getPoisonTicks();
