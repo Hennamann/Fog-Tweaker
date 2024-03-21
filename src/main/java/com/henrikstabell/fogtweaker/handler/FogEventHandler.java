@@ -50,13 +50,8 @@ public class FogEventHandler {
                     event.setRed(red / 255F);
                     event.setGreen(green / 255F);
                     event.setBlue(blue / 255F);
-
-                    //final float[] fogColors = {red / 255F, green / 255F, blue / 255F};
-                    //RenderSystem.setShaderFogColor(255F, 0F, 0F);
                 }
             }
-
-
         }
     }
 
@@ -65,12 +60,9 @@ public class FogEventHandler {
         Level world = event.getCamera().getEntity().level;
         BlockPos pos = event.getCamera().getBlockPosition();
         ResourceLocation biome = world.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getKey(world.getBiome(pos).get());
-        //ResourceLocation biome = world.getBiome(pos).getRegistryName();
+
         FogType fogtype = event.getCamera().getFluidInCamera();
         Entity entity = event.getCamera().getEntity();
-
-        //LOGGER.info("OnRenderFog\n");
-
 
         if (Configuration.getFogEnabled()) {
             if (!FogTweaker.BIOME_OVERRIDES.contains(biome)) {
@@ -129,6 +121,5 @@ public class FogEventHandler {
                 }
             }
         }
-
     }
 }
