@@ -7,9 +7,11 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -17,26 +19,26 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.FogType;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.EntityViewRenderEvent;
+import net.minecraftforge.client.event.ViewportEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.awt.*;
 import java.util.Objects;
-import java.util.Random;
 
 @Mod.EventBusSubscriber(modid = FogTweaker.MODID, value = Dist.CLIENT)
 public class FogEventHandler {
 
     @SubscribeEvent
-    public static void onRenderFogColors(EntityViewRenderEvent.FogColors event) {
+    public static void onRenderFogColors(ViewportEvent.ComputeFogColor event) {
         Level world = event.getCamera().getEntity().level;
         BlockPos pos = event.getCamera().getBlockPosition();
-        ResourceLocation biome = world.getBiome(pos).getRegistryName();
+        ResourceLocation biome = world.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getKey(world.getBiome(pos).get());
 
         if (!FogTweaker.BIOME_OVERRIDES.contains(biome)) {
             if (Configuration.getFogEnabled()) {
+
                 if (BiomeConfig.getBiomeConfigFor(biome).isFogEnabled()) {
                     String fogColorString = BiomeConfig.getBiomeConfigFor(biome).getFogColor();
                     Color fogColor = Color.decode(fogColorString);
@@ -45,21 +47,19 @@ public class FogEventHandler {
                     float green = fogColor.getGreen();
                     float blue = fogColor.getBlue();
 
-                    final float[] fogColors = {red / 255F, green / 255F, blue / 255F};
-
-                    event.setRed(fogColors[0]);
-                    event.setGreen(fogColors[1]);
-                    event.setBlue(fogColors[2]);
+                    event.setRed(red / 255F);
+                    event.setGreen(green / 255F);
+                    event.setBlue(blue / 255F);
                 }
             }
         }
     }
 
     @SubscribeEvent
-    public static void onRenderFog(EntityViewRenderEvent.RenderFogEvent event) {
+    public static void onRenderFog(ViewportEvent.RenderFog event) {
         Level world = event.getCamera().getEntity().level;
         BlockPos pos = event.getCamera().getBlockPosition();
-        ResourceLocation biome = world.getBiome(pos).getRegistryName();
+        ResourceLocation biome = world.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getKey(world.getBiome(pos).get());
 
         FogType fogtype = event.getCamera().getFluidInCamera();
         Entity entity = event.getCamera().getEntity();
@@ -114,7 +114,7 @@ public class FogEventHandler {
         }
         if (!FogTweaker.BIOME_OVERRIDES.contains(biome)) {
             if (Configuration.getFogParticlesEnabled() && BiomeConfig.getBiomeConfigFor(biome).isParticlesEnabled() && !Minecraft.getInstance().isPaused()) {
-                Random random = event.getCamera().getEntity().getLevel().getRandom();
+                RandomSource random = event.getCamera().getEntity().getLevel().getRandom();
                 for (int i = 0; i < BiomeConfig.getBiomeConfigFor(biome).getParticleAmount(); i++) {
                     Vec3 vec = event.getCamera().getEntity().position().add(0, random.nextDouble() * 3D, 0).add(new Vec3(random.nextDouble() * 3D, 0D, 0D).yRot((float) Math.toRadians(random.nextInt(360))));
                     event.getCamera().getEntity().level.addParticle((ParticleOptions) Objects.requireNonNull(ForgeRegistries.PARTICLE_TYPES.getValue(new ResourceLocation(BiomeConfig.getBiomeConfigFor(biome).getParticleType()))), vec.x, vec.y, vec.z, 0, 0, 0);

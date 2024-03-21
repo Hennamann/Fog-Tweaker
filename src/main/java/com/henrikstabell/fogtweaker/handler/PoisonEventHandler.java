@@ -4,6 +4,7 @@ import com.henrikstabell.fogtweaker.FogTweaker;
 import com.henrikstabell.fogtweaker.config.Configuration;
 import com.henrikstabell.fogtweaker.config.biomeconfig.BiomeConfig;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -21,12 +22,11 @@ public class PoisonEventHandler {
      * Uses the JSON configs to determine if damage should be dealt and how much and how often.
      */
     @SubscribeEvent
-    public static void onPlayerUpdate(LivingEvent.LivingUpdateEvent event) {
-        LivingEntity entity = event.getEntityLiving();
+    public static void onPlayerUpdate(LivingEvent.LivingTickEvent event) {
+        LivingEntity entity = event.getEntity();
         Level world = entity.level;
         BlockPos pos = entity.blockPosition();
-        ResourceLocation biome = world.getBiome(pos).getRegistryName();
-
+        ResourceLocation biome = world.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY).getKey(world.getBiome(pos).get());
         if (Configuration.getPoisonousFogEnabled()) {
             if (!FogTweaker.BIOME_OVERRIDES.contains(biome)) {
                 int poisonTicks = BiomeConfig.getBiomeConfigFor(biome).getPoisonTicks();
