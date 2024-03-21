@@ -4,7 +4,6 @@ import com.henrikstabell.fogtweaker.FogTweaker;
 import com.henrikstabell.fogtweaker.config.Configuration;
 import com.henrikstabell.fogtweaker.config.biomeconfig.BiomeConfig;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.core.BlockPos;
@@ -24,11 +23,9 @@ import net.minecraftforge.client.event.ViewportEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.slf4j.Logger;
 
 import java.awt.*;
 import java.util.Objects;
-import java.util.Random;
 
 @Mod.EventBusSubscriber(modid = FogTweaker.MODID, value = Dist.CLIENT)
 public class FogEventHandler {
