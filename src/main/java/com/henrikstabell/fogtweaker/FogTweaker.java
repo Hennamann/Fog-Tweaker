@@ -82,7 +82,6 @@ public class FogTweaker {
     }
 
     private void worldLoad(final LevelEvent.Load event) {
-        // TODO test if this actually works
         LOGGER.info("Fog Tweaker: Generating/Updating Biome configs…");
         BiomeConfigWriter.genBiomeConfigs(event.getLevel());
         LOGGER.info("Fog Tweaker: Reading Biome Configs…");
